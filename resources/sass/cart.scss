@@ -1,0 +1,294 @@
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+
+html{
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+*,*::before,*::after{
+    box-sizing: inherit;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    font-size: 1.6rem;
+    overflow: hidden;
+    background-image: url('https://img.freepik.com/foto-gratis/vista-superior-suministros-pintura-espacio-copia_23-2148563644.jpg?w=1060&t=st=1686539159~exp=1686539759~hmac=9b74264007b558b11e49c9df0b838fb3224e56634ab8eb487a35d9fa1c7cb02d');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.su-orden{
+    font-family: 'Pacifico', cursive;
+    font-size: 4rem;
+    background-color: #f1c40f; /* Color inicial */
+    transition: background-color 0.5s ease-in-out;
+    &:hover {
+        background-color: #3498db; /* Color al pasar el mouse */
+    }
+    padding: 2rem;
+}
+.imagenes-complemento{
+    position: relative;
+    .img1{
+        width: 20rem;
+        position: absolute;
+        top: -7.9rem;
+        right: -6rem;
+    }
+}
+p{
+    margin: 0;
+}
+.esconder{
+    display: none;
+}
+.content-table-cart{
+    @media (min-width: 768px) {
+        width: 90%;
+        // background-color: red;
+    }
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 3rem;
+    .table-cart{
+        overflow: scroll;
+        @media (min-width: 1250px) {
+            overflow: unset;
+        }
+        display: grid;
+        grid-template-columns: 1fr;
+        thead{
+            width: 120rem;
+            @media (min-width: 1250px) {
+                width: unset;
+            }
+            display: grid;
+            grid-template-columns: 1fr;
+            height: 4rem;;
+            tr{
+                gap: .2rem;
+                display: grid;
+                grid-template-columns: repeat(11, 1fr);
+                // color: white;
+                font-family: none;
+                border-top: 1px solid rgb(185, 166, 166);
+                font-size: 2rem;
+                text-align: center;
+            }
+        }
+
+        tbody{
+            background-color: white;
+            overflow-y: scroll;
+            height: 45rem;
+            @media (min-width: 0px) and (max-width: 575px) {
+                height: 30rem;
+            }
+            @media (min-width: 576px) and (max-width: 767px) {
+                height: 35rem;
+            }
+            
+            tr{
+                box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
+                display: grid;
+                grid-template-columns: repeat(11, 1fr);
+                align-items: center;
+                text-align: center;
+                padding: 1rem 0;
+                &:hover{
+                    background-color: rgb(222, 222, 222);
+                }
+                .cantidad{
+                    input{
+                        width: 6rem;
+                        padding: .2rem 1rem;
+                        font-size: 1.8rem;
+                    }
+                }
+                .delete-product{
+                    button{
+                        border: none;
+                        background-color: unset;
+                        font-size: 3rem;
+                        color: #E74C3C;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+    }
+    .finalizar-compra-cart{
+        text-align: right;
+        padding: 2rem 0;
+        // // background-color: bisque;
+        // gap: 1rem;
+        .total{
+            font-size: 2.5rem;
+            border-bottom: 1px solid rgb(185, 166, 166);
+            margin-bottom: 1rem;
+            @media (min-width: 768px){
+                position: fixed;
+                width: 100%;
+                right: 7%;
+                bottom: 10%;
+            }    
+        }
+        .acciones{
+            @media (min-width: 0px) and (max-width: 767px) {
+                display: flex;
+                flex-direction: column;
+            }            
+            @media (min-width: 768px){
+                position: fixed;
+                right: 7%;
+                bottom: 5%;
+            }            
+            a{
+                @media (min-width: 0px) and (max-width: 767px) {
+                    margin-bottom: .5rem;
+                } 
+                text-decoration: none;
+                color: white;
+                background-color: #565656;
+                padding: 1rem;
+                // font-size: 2rem;
+                &:hover{
+                    background-color: #4d4c4c;
+                }
+            }
+            button{
+                text-decoration: none;
+                color: white;
+                font-size: 1.6rem;
+                // font-weight: bold;
+                background-color: #138D75;
+                padding: .8rem;
+                border: none;
+                &:hover{
+                    background-color: #14826c;
+                }
+            }
+            .inicia-session{
+                text-decoration: none;
+                color: white;
+                font-size: 1.6rem;
+                // font-weight: bold;
+                background-color: #138D75;
+                border: none;
+                &:hover{
+                    background-color: #14826c;
+                }
+            }
+        }
+    }
+}
+// Cuando el cart está vacio
+.cart-vacio{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @media (min-width: 768px) {
+        width: 80rem;
+    }
+    img{
+        width: 100%;
+    }
+    .info-sigue-comprando{
+        text-align: center;
+        font-size: 2rem;
+        .comentario-sigue-comprando{
+            margin-bottom: 5rem;
+        }
+        .btn-sigue-comprando{
+            text-decoration: none;
+            color: white;
+            background-color: #565656;
+            padding: 2rem;
+            border-radius: .4rem;
+            // font-size: 2rem;
+            &:hover{
+                background-color: #4d4c4c;
+            }
+        }
+    }
+}
+
+.modal-title{
+    font-family: 'Pacifico', cursive;
+    font-size: 2.3rem;
+}
+.close{
+    border: none;
+    background-color: unset;
+    font-size: 2.3rem;
+    transition: .3s ease;
+    &:hover{
+        transform: rotate(90deg);
+    }
+}
+.cuerpo-modal{
+    background-image: url('https://img.freepik.com/vector-gratis/nebulosa-abstracta_91008-231.jpg?w=900&t=st=1686546239~exp=1686546839~hmac=f9d396ceae6130016487239a0f3d9180d535e4882e99e8b989738afd6839769f');
+    font-size: 1.8rem;
+    form{
+        .info{
+            .content-info{
+                display: flex;
+                justify-content: space-between;
+
+            }
+        }
+        .content-campo{
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            .campo{
+                display: flex;
+                justify-content: space-between;
+                .adjuntar_imagen{
+                    width: 18.3rem;
+                }
+                input{
+                    width: 18rem;
+                }
+            }
+            .select{
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+        label{
+            text-align: center;
+        }
+
+        .modal-footer{
+            button{
+                display: flex;
+                align-items: center;
+                border: none;
+                padding: .5rem 1rem;
+                color: white;
+                border-radius: .4rem;
+                ion-icon{
+                    margin-right: .5rem;
+                    font-size: 2.5rem;
+                }
+                &.close-btn{
+                    background-color: #4d4c4c;
+                }
+                &.finalizar-btn{
+                    background-color: #138D75;
+                    &.ocultar{
+                        cursor: no-drop;
+                        opacity: .5;
+                    }
+                }
+            }
+        }
+    }
+}

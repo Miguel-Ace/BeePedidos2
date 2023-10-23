@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+
+html{
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+*,*::before,*::after{
+    box-sizing: inherit;
+}
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    font-size: 1.6rem;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+img{
+    width: 100%;
+}
+.header{
+    background-image: url('https://img.freepik.com/foto-gratis/alimentos-negocios-puerta-multitud-blanco_1253-407.jpg?w=900&t=st=1686304694~exp=1686305294~hmac=b4ffbb8ffd96ca56795a81d4c434d86349e2756db41ab91c319d6daf02a7e612');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-behavior: smooth;
+    &::before{
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 25rem;
+        background: rgba(0,0,0,.4);
+    }
+    .logo{
+        position: absolute;
+        width: 20rem;
+        margin-left: 1rem;
+        top: 0;
+        left: 0;
+    }
+    .descripcion{
+        z-index: 1;
+        text-align: center;
+        color: white;
+        .titulo{
+            font-size: 6rem;
+            margin: 1rem 0;
+            letter-spacing: 1px;
+            transition: 0.3s cubic-bezier(0.87, -0.01, 0.58, 1);
+            &:hover{
+                letter-spacing: 4px;
+            }
+        }
+        .breve-descrip{
+            margin-bottom: 4rem;
+        }
+        .btn-select-empresa{
+            background: #E67E22;
+            text-decoration: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 3rem;
+            border-radius: 1rem;
+            transition: all .3s ease;
+            &:hover{
+                background: white;
+                border: 1px solid #E67E22;
+                color: #E67E22;
+            }
+            // transition: 0.3s cubic-bezier(0.87, -0.01, 0.58, 1);
+        }
+        // @media (min-width: 0px) and (max-width: 575px) {
+        //     font-size: 2.3rem;
+        // }
+    }
+}
+.contenedor{
+    width: 34rem;
+    // width: 34rem;
+    // height: 100vh;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    @media (min-width: 720px) {
+        width: 83rem;
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 1100px) {
+        width: 128rem;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    padding: 2rem;
+    gap: 2rem;
+    .card{
+        .card-empresa{
+            position: relative;
+            overflow: hidden;
+            box-shadow: 2px 1px 10px 1px rgba(0, 0, 0, 0.3);
+            a{
+                img{
+                    &:hover{
+                        border: 1px solid salmon;
+                    }
+                    height: 21rem;
+                }
+            }
+        }
+        .part-inferior{
+            background: #DC7633;
+            color: white;
+            border: 1px solid white;
+            transition: .2s ease;
+            text-align: center;
+            &:hover{
+                background: #333;
+                // color: #DC7633;
+                border: 1px solid #DC7633;
+            }
+            p{
+                padding: 1.3rem;
+                margin: 0 0 1rem;
+                &.titulo-empresa{
+                    // text-align: center;
+                    font-size: 2rem;
+                    margin-bottom: 0;
+                }
+                &.descripcion-empresa{
+                    // text-align: center;
+                    margin-bottom: .5rem;
+                }
+            }
+            a{
+                background-color: white;
+                color:#333;
+                text-decoration: none;
+                padding: 1rem 6rem;
+                border-radius: 1rem;
+                &:hover{
+                    color: #DC7633;
+                }
+            }
+        }
+    }
+}
+
+footer{
+    width: 100%;
+    height: 15rem;
+    background: #333;
+    position: relative;
+    &::after{
+        content: '';
+        position: absolute;
+        top: 3rem;
+        width: 100%;
+        height: 1rem;
+        background: white;
+    }
+    &::before{
+        content: '';
+        position: absolute;
+        bottom: 3rem;
+        width: 100%;
+        height: 1rem;
+        background: white;
+    }
+}
