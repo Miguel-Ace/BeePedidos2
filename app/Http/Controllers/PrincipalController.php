@@ -13,6 +13,7 @@ use App\Models\TypeOrder;
 use App\Models\TypeDelivery;
 use Illuminate\Http\Request;
 use App\Models\ProductModifier;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Mail\notificacionesFactura;
 use App\Http\Controllers\Controller;
@@ -273,7 +274,7 @@ class PrincipalController extends Controller
         
         $ultimoValue = end($meterPedidosXId);
         
-        if (empty($ultimoValue) || $ultimoValue->cerrar_pedido == "1") {
+        if (empty($ultimoValue) || $ultimoValue->cerrar_pedido == 1) {
             
             $cartItems = session('cart');
     
@@ -331,7 +332,7 @@ class PrincipalController extends Controller
             Order::insert($datos);
             
         }
-        elseif(($ultimoValue->cerrar_pedido == null || $ultimoValue->cerrar_pedido == "0") && session()->has('cart')){
+        elseif(($ultimoValue->cerrar_pedido == null || $ultimoValue->cerrar_pedido == 0) && session()->has('cart')){
 
             if ($request->file('adjuntar_imagen')) {
                 $datos['adjuntar_imagen'] = $request->file('adjuntar_imagen')->storeAs('archivos', $request->file('adjuntar_imagen')->getClientOriginalName(), 'public');
@@ -394,7 +395,7 @@ class PrincipalController extends Controller
 
             funActualizarDetail($ultimoValue->num_pedido,$request);
         }
-
+        
         //=============================================================================== 
         // $numSumar = 11;
         // // Funciòn para sacar el checksum sha512
