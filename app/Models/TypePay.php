@@ -9,5 +9,8 @@ class TypePay extends Model
 {
     use HasFactory;
     // public $timestamps = false;
-    protected $fillable = ['tipo_pago','cod_tipo_pago_beesy'];
+    protected $fillable = [
+        'tipo_pago',
+        'cod_tipo_pago_beesy'
+    ];
 }

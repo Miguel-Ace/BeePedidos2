@@ -1,5 +1,5 @@
 @extends('layout.app')
-@vite(['resources/js/products.js'])
+@vite(['resources/js/products.js','resources/js/add_producto.js','resources/js/botones_cart.js'])
 
 {{-- <pre>
     {{$ultimoValue}}
@@ -25,6 +25,13 @@
                 icon: "success",
                 button: "Aceptar",
             });
+        </script>
+    @endif
+
+    @if (session('borrarOrden'))
+        <script>
+            let arr_products = []
+            sessionStorage.setItem('productos', JSON.stringify(arr_products))
         </script>
     @endif
 
@@ -406,6 +413,7 @@
         @if ($producto->descuento != NULL)
             @if ($producto->activo == true)
                 <div class="productos">
+                    <span class="id-producto d-none">{{$producto->id}}</span>
                     <div class="content-img">
                         <img src="{{$producto->url_imagen}}" alt="">
                     </div>
@@ -416,7 +424,7 @@
 
                     <div class="descripcion">{{$producto->descripcion}}</div>
                     
-                    <div class="precio">{{$moneda}}<span>{{number_format($producto->precio - ($producto->precio * $producto->descuento / 100), 2)}}</span> <sub>{{$moneda}}{{number_format($producto->precio, 2)}}</sub></div>
+                    <div class="precio"><span class="moneda">{{$moneda}}</span><span>{{number_format($producto->precio - ($producto->precio * $producto->descuento / 100), 2)}}</span> <sub>{{$moneda}}{{number_format($producto->precio, 2)}}</sub></div>
                     
                     <div class="existencia">Exist: <span>{{$producto->existencia}}</span></div>
 
@@ -424,87 +432,13 @@
                     <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
                     {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
 
-                    <form action="{{ route('add_to_cart', $producto->id) }}" method="get">
-                        @csrf
-                        <div>
-                            @php
-                                $id_producto1 = 0;
-                                $id_producto2 = 0;
-                                $id_producto3 = 0;
-
-                                foreach ($modificadores as $modificador) {
-                                    if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 1 || $modificador->tipo_modificador == 123)) {
-                                        $id_producto1 += $modificador->id_producto;
-                                    }
-                                }
-                                foreach ($modificadores as $modificador) {
-                                    if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 2 || $modificador->tipo_modificador == 123)) {
-                                        $id_producto2 += $modificador->id_producto;
-                                    }
-                                }
-                                foreach ($modificadores as $modificador) {
-                                    if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 3 || $modificador->tipo_modificador == 123)) {
-                                        $id_producto3 += $modificador->id_producto;
-                                    }
-                                }
-                            @endphp
-
-                            @if ($id_producto1 == $producto->id)
-                                <select name="id_modificador1" id="id_modificador1">
-                                    @foreach ($empresas as $empresa)
-                                        @if (($empresa->id == $idEmpresa) && ($empresa->tipo_licencia == "pos"))
-                                            <option value="" selected disabled>Talla</option>
-                                        @else
-                                            <option value="" selected disabled>Complemento</option>
-                                        @endif
-                                    @endforeach
-
-                                    @foreach ($modificadores as $modificador)
-                                        @if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 1 || $modificador->tipo_modificador == 123))
-                                            <option value="{{$modificador->id}}">{{$modificador->modificador}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            @endif
-
-                            @if ($id_producto2 == $producto->id)
-                                <select name="id_modificador2" id="id_modificador2">
-                                    @foreach ($empresas as $empresa)
-                                        @if (($empresa->id == $idEmpresa) && ($empresa->tipo_licencia == "pos"))
-                                            <option value="" selected disabled>Color</option>
-                                        @else
-                                            <option value="" selected disabled>Preferencia</option>
-                                        @endif
-                                    @endforeach
-
-                                    @foreach ($modificadores as $modificador)
-                                        @if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 2 || $modificador->tipo_modificador == 123))
-                                            <option value="{{$modificador->id}}">{{$modificador->modificador}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            @endif
-
-                            @if ($id_producto3 == $producto->id)
-                                <select name="id_modificador3" id="id_modificador3">
-                                            <option value="" selected disabled>Opción 3</option>
-                                    @foreach ($modificadores as $modificador)
-                                        @if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 3 || $modificador->tipo_modificador == 123))
-                                            <option value="{{$modificador->id}}">{{$modificador->modificador}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            @endif
-                        </div>
-
-                        <input class="button" type="submit" value="Agregar">
-                    </form>
-                    {{-- <a href="{{ route('add_to_cart', $producto->id) }}" class="" role="button">Agregar</a> --}}
+                    <input class="button" type="submit" value="Agregar">
                 </div>
             @endif
         @else
             @if ($producto->activo == true)
                 <div class="productos">
+                    <span class="id-producto d-none">{{$producto->id}}</span>
                     <div class="content-img">
                         <img src="{{$producto->url_imagen}}" alt="">
                     </div>
@@ -515,7 +449,7 @@
 
                     <div class="descripcion">{{$producto->descripcion}}</div>
 
-                    <div class="precio">{{$moneda}}<span>{{number_format($producto->precio, 2)}}</span></div>
+                    <div class="precio"><span class="moneda">{{$moneda}}</span><span>{{number_format($producto->precio, 2)}}</span></div>
 
                     <div class="existencia">Exist: <span>{{$producto->existencia}}</span></div>
 
@@ -523,122 +457,11 @@
                     <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
                     {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
 
-                    <form action="{{ route('add_to_cart', $producto->id) }}" method="get">
-                        @csrf
-                        <div>
-                            @php
-                                $id_producto1 = 0;
-                                $id_producto2 = 0;
-                                $id_producto3 = 0;
-
-                                foreach ($modificadores as $modificador) {
-                                    if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 1 || $modificador->tipo_modificador == 123)) {
-                                        $id_producto1 += $modificador->id_producto;
-                                    }
-                                }
-                                foreach ($modificadores as $modificador) {
-                                    if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 2 || $modificador->tipo_modificador == 123)) {
-                                        $id_producto2 += $modificador->id_producto;
-                                    }
-                                }
-                                foreach ($modificadores as $modificador) {
-                                    if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 3 || $modificador->tipo_modificador == 123)) {
-                                        $id_producto3 += $modificador->id_producto;
-                                    }
-                                }
-                            @endphp
-
-                            @if ($id_producto1 == $producto->id)
-                                <select name="id_modificador1" id="id_modificador1">
-                                    @foreach ($empresas as $empresa)
-                                        @if (($empresa->id == $idEmpresa) && ($empresa->tipo_licencia == "pos"))
-                                            <option value="" selected disabled>Talla</option>
-                                        @else
-                                            <option value="" selected disabled>Complemento</option>
-                                        @endif
-                                    @endforeach
-
-                                    @foreach ($modificadores as $modificador)
-                                        @if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 1 || $modificador->tipo_modificador == 123))
-                                            <option value="{{$modificador->id}}">{{$modificador->modificador}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            @endif
-
-                            @if ($id_producto2 == $producto->id)
-                                <select name="id_modificador2" id="id_modificador2">
-                                    @foreach ($empresas as $empresa)
-                                        @if (($empresa->id == $idEmpresa) && ($empresa->tipo_licencia == "pos"))
-                                            <option value="" selected disabled>Color</option>
-                                        @else
-                                            <option value="" selected disabled>Preferencia</option>
-                                        @endif
-                                    @endforeach
-
-                                    @foreach ($modificadores as $modificador)
-                                        @if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 2 || $modificador->tipo_modificador == 123))
-                                            <option value="{{$modificador->id}}">{{$modificador->modificador}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            @endif
-
-                            @if ($id_producto3 == $producto->id)
-                                <select name="id_modificador3" id="id_modificador3">
-                                            <option value="" selected disabled>Opción 3</option>
-                                    @foreach ($modificadores as $modificador)
-                                        @if ($modificador->id_producto == $producto->id && ($modificador->tipo_modificador == 3 || $modificador->tipo_modificador == 123))
-                                            <option value="{{$modificador->id}}">{{$modificador->modificador}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            @endif
-                        </div>
-
-                        <input class="button" type="submit" value="Agregar">
-                    </form>
-                    {{-- <a href="{{ route('add_to_cart', $producto->id) }}" class="" role="button">Agregar</a> --}}
+                    <input class="button" type="submit" value="Agregar">
                 </div>
             @endif
         @endif
     @endforeach
-
-    <script>       
-        // Verificar si el navegador soporta geolocalización
-        if ("geolocation" in navigator) {
-        // Obtener la posición actual del usuario
-            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-        } else {
-            // El navegador no soporta geolocalización
-            document.getElementById("pais").innerText = "Geolocalización no disponible en este navegador.";
-        }
-
-        // Función de éxito para obtener la posición
-        function successCallback(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-
-            // Hacer una solicitud a un servicio de geolocalización para obtener la información del país
-            const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=es`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const country = data.countryName;
-                    document.getElementById("pais").innerText = country;
-                })
-                .catch(error => {
-                    console.error("Error al obtener información del país:", error);
-                    document.getElementById("pais").innerText = "No se pudo obtener el país.";
-                });
-        }
-
-        // Función de error si falla la obtención de la posición
-        function errorCallback(error) {
-            console.error("Error al obtener la posición:", error);
-            document.getElementById("pais").innerText = "No se pudo obtener la posición.";
-        }
-    </script>
 
     <script>
         //Darle color a la categoria seleccionada
@@ -700,7 +523,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         // sessionStorage.removeItem('sumatoria');
         const empresas = JSON.parse('{!! json_encode($empresas) !!}')
         const idEmpresa = JSON.parse('{!! $idEmpresa !!}')
@@ -777,7 +600,7 @@
                 // console.log("no hay minimo");
             }
         }
-    </script>
+    </script> --}}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
@@ -790,73 +613,98 @@
             });
         });
     </script>
+
+    <script>
+  
+        const pedidos = JSON.parse('{!! json_encode($pedidos) !!}')
+        const usuario = '{!! json_encode($usuarioAuth) !!}'
+        const detallePedidos = JSON.parse('{!! json_encode($detalle_pedidos) !!}')
+
+        let arr_idPedidos = []
+        let idProducts = []
+        let arr_products = []
+
+        pedidos.forEach(item => {
+            if (item.id_cliente == parseInt(usuario) && item.cerrar_pedido == 0) {
+                sessionStorage.setItem('idPedido', JSON.stringify(item.id))
+                // sessionStorage.setItem('numOrder', JSON.stringify(numPedido))
+                mandarPedido(item.num_pedido)
+            }
+        });
+
+        // console.log('hola');
+        function mandarPedido(numPedido) {
+            detallePedidos.forEach(item => {
+                if (item.num_pedido == numPedido) {
+                    // console.log(item.id_producto)
+                    idProducts.push({id:item.id})
+                    arr_idPedidos.push({id:numPedido})
+                    // sessionStorage.setItem('numOrder', JSON.stringify(numPedido))
+                    const valor = item.precio * item.cantidad
+                    agregarAlArreglo(item.id_producto, item.cantidad, valor)
+                }
+                // else{
+                //     sessionStorage.setItem('numOrder', JSON.stringify(''))
+                //     sessionStorage.setItem('productos', JSON.stringify(''))
+                // }
+            })
+        }
+
+        function agregarAlArreglo(idProduct, cantidadProduct, precioProduct) {
+            productos.forEach(item => {
+                const id = item.querySelector('.id-producto');
+                const imagen = item.querySelector('.content-img img').src;
+                const nombre = item.querySelector('.descuento p');
+                const descuento = item.querySelector('.span');
+                const descripcion = item.querySelector('.descripcion');
+                // const precio = item.querySelector('.precio span:nth-child(2)');
+                const moneda = item.querySelector('.precio .moneda');
+                const existencia = item.querySelector('.existencia span');
+                const categoria = item.querySelector('.categoria');
+                const cadProductoBeesy = item.querySelector('.cadProductoBeesy');
+    
+                if (idProduct == id.textContent.trim()) {
+                    arr_products.push({
+                        id: id.textContent.trim(),
+                        imagen: imagen,
+                        nombre: nombre.textContent.trim(),
+                        descuento: descuento,
+                        descripcion: descripcion.textContent.trim(),
+                        precio: precioProduct,
+                        moneda: moneda.textContent.trim(),
+                        existencia: existencia.textContent.trim(),
+                        categoria: categoria.textContent.trim(),
+                        cadProductoBeesy: cadProductoBeesy.textContent.trim(),
+                        cantidad: cantidadProduct
+                    })
+                }
+            })
+        }
+        
+        if (!sessionStorage.getItem('productos') || JSON.parse(sessionStorage.getItem('productos')).length == 0) {
+            sessionStorage.setItem('productos', JSON.stringify(arr_products))
+            sessionStorage.setItem('idProducts', JSON.stringify(idProducts))
+        }
+
+        sessionStorage.setItem('numOrder', JSON.stringify(arr_idPedidos[arr_idPedidos.length - 1].id))
+    </script>
 @endsection
 
 @section('list-productos-cart')
     <div class="carrito">
         <p class="tittle-cart">Mi Pedido</p>
         <p class="desc-cart">Aqui podras ver el resumen <br> y totales de tu pedido</p>
-        {{-- @if (session('cart'))
-            <ion-icon name="cart-outline" class="con-producto"></ion-icon> <span class="contidad badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
-        @else
-            <ion-icon name="cart-outline"></ion-icon> <span class="contidad badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
-        @endif --}}
+        
         <div class="dropdown-carrito">
-            @if(session('cart'))
-                @foreach(session('cart') as $id => $details)
-                        @if ($details['descuento'] != NULL)
-                            <div class="detalle-carrito">
-                                <div class="detalle-img">
-                                    <img src="{{ $details['url_imagen'] }}" width="100">
-                                </div>
-                                <div class="detalle-producto">
-                                    <p>{{ $details['producto'] }}</p>
-                                    <span class="price text-info">{{$moneda}}{{ number_format(($details['precio'] - ($details['precio'] * $details['descuento'] / 100)) * $details['quantity'] , 2) }}</span> Cantidad: <span class="count">{{ $details['quantity'] }}</span>
-                                </div>
-                            </div>
-                        @else
-                            <div class="detalle-carrito">
-                                <div class="detalle-img">
-                                    <img src="{{ $details['url_imagen'] }}" width="100">
-                                </div>
-                                <div class="detalle-producto">
-                                    <p>{{ $details['producto'] }}</p>
-                                    <span class="price text-info"> ${{ number_format($details['precio'] * $details['quantity'] , 2) }}</span> Cantidad: <span class="count">{{ $details['quantity'] }}</span>
-                                </div>
-                            </div>
-                        @endif
-                @endforeach
-            @else
-                <p class="desc-sin-producto">No hay elementos en <br> tu pedido aún</p>
-            @endif
-
-            {{-- <div class="productos-agregados">
-            </div> --}}
-
+            <div class="productos-agregados"></div>
+            
             <div class="total-carrito">
-                @php $total = 0 @endphp
-                @foreach((array) session('cart') as $id => $details)
-
-                    @if ($details['descuento'] != NULL)
-                        {{-- Sacando el descuento --}}
-                        <span class="esconder">{{$descuento = $details['precio'] * $details['descuento'] / 100}}</span>
-                        @php $total += ($details['precio'] - $descuento) * $details['quantity'] @endphp
-                    @else
-                        @php $total += $details['precio'] * $details['quantity'] @endphp
-                    @endif
-
-                @endforeach
-                <p>Total: <span class="text-info">{{$moneda}}{{ number_format($total , 2) }}</span></p>
-                {{-- <div class="salir-modal-carrito">X</div> --}}
+                <p>Total: <span class="text-precio">0</span></p>
             </div>
 
             <div class="ver-carrito">
-                {{-- <a href="{{ route('cart') }}" class="">Ver Todo</a> --}}
-                @if (session('cart'))
-                    <a href="{{ url('/cart'.'/'.$idEmpresa) }}" class="confirmar">CONFIRMAR PEDIDO</a>
-                @else
-                    <a class="confirmar deshabilitado">CONFIRMAR PEDIDO</a>
-                @endif
+                <a href="{{ url('/cart'.'/'.$idEmpresa) }}" class="confirmar">CONFIRMAR PEDIDO</a>
+                <a class="confirmar deshabilitado">CONFIRMAR PEDIDO</a>
             </div>
         </div>
     </div>

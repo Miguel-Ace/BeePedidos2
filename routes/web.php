@@ -159,15 +159,15 @@ Route::get('/', [PrincipalController::class, 'selectEmpresa']);
 Route::get('/{idEmpresa}', [PrincipalController::class, 'index']);
 
 
-Route::get('addTomodificador/{id}', [PrincipalController::class, 'addTomodificador']);
+// Route::get('addTomodificador/{id}', [PrincipalController::class, 'addTomodificador']);
+// Route::get('finalizar_pedido', [PrincipalController::class, 'cart_finalizar'])->name('cart_finalizar');
 
-Route::get('finalizar_pedido', [PrincipalController::class, 'cart_finalizar'])->name('cart_finalizar');
 Route::get('/cart/{idEmpresa}', [PrincipalController::class, 'cart'])->name('cart');
-Route::get('add-to-cart/{id}', [PrincipalController::class, 'addToCart'])->name('add_to_cart');
-Route::patch('update-cart', [PrincipalController::class, 'update'])->name('update_cart');
-Route::delete('remove-from-cart', [PrincipalController::class, 'remove'])->name('remove_from_cart');
+// Route::get('add-to-cart/{id}', [PrincipalController::class, 'addToCart'])->name('add_to_cart');
+// Route::patch('update-cart', [PrincipalController::class, 'update'])->name('update_cart');
+// Route::delete('remove-from-cart', [PrincipalController::class, 'remove'])->name('remove_from_cart');
 
-Route::post('/checkout/{idEmpresa}', [PrincipalController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/{idEmpresa}', [PrincipalController::class, 'checkout']);
 
 
 // ========= Roles ==========

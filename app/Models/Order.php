@@ -23,8 +23,8 @@ class Order extends Model
         'descuento',
         'iva',
         'propina',
-        'id_tipo_pago',
         'factura_electronica',
+        'id_tipo_pago',
         'id_tipo_pedido',
         'id_tipo_entrega',
         'adjuntar_imagen',
@@ -32,9 +32,8 @@ class Order extends Model
         'direccion',
         'latitud',
         'longitud',
-        'tipo_documento',
-        'tiempo_estimado_entrega',
         'tipo',
+        'tipo_documento',
         'cerrar_pedido'
     ];
 

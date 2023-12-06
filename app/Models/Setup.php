@@ -23,6 +23,11 @@ class Setup extends Model
         'cantidad_pedidos',
         'tipo_licencia',
         'tiempo_preparacion',
+        'validar_reserva',
+        'minimo_cantidad',
         'moneda',
+        'baner1',
+        'baner2',
+        'baner3',
     ];
 }

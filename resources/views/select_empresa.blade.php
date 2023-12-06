@@ -64,6 +64,10 @@
     <script>
         sessionStorage.removeItem('sumatoria');
         sessionStorage.removeItem('idCategoria')
+        sessionStorage.removeItem('numOrder')
+        sessionStorage.removeItem('productos')
+        sessionStorage.removeItem('idProducts')
+        sessionStorage.removeItem('idPedido')
     </script>
 </body>
 </html>

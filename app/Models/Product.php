@@ -13,14 +13,12 @@ class Product extends Model
         'producto',
         'descripcion',
         'precio',
-        'precio2',
         'descuento',
-        'id_empresa',
         'id_categoria',
         'url_imagen',
         'cod_producto_beesy',
         'tipo_producto_beesy',
         'activo',
-        'orden_Lista',
+        'existencia',
     ];
 }

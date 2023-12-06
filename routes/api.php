@@ -87,7 +87,7 @@ Route::get('/pedido_x_empresa/{empresa}', [ApiController::class, 'getPedidoPorEm
 
 Route::get('/pedido', [ApiController::class, 'getPedido'])->middleware('auth:sanctum');
 Route::get('/pedido/{id}', [ApiController::class, 'getPedidoid'])->middleware('auth:sanctum');
-Route::post('/pedido/insert', [ApiController::class, 'insertPedido'])->middleware('auth:sanctum');
+Route::post('/pedido/insert', [ApiController::class, 'insertPedido']);
 Route::put('/pedido/update/{id}', [ApiController::class, 'updatePedido'])->middleware('auth:sanctum');
 Route::put('/pedido/update', [ApiController::class, 'updatePedidos'])->middleware('auth:sanctum');
 Route::delete('/pedido/delete/{id}', [ApiController::class, 'deletePedido'])->middleware('auth:sanctum');

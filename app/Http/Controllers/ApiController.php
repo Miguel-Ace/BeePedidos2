@@ -470,11 +470,12 @@ class ApiController extends Controller
 
     public function getPedido(){
 
-        $pedidos = Order::where('id_estado', '!=', 2)->get();
+        $pedidos = Order::where('id_estado', '!=' , 2)->get();
+        // return response()->json(Order::all(),200);
         
-        return response()->json($pedidos->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
+        return response()->json($pedidos->load('cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
 
-        // return response()->json(Pedido::all()->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'),200);
+        // return response()->json(Order::all()->load('cliente','estado','tipoPago','tipoPedido','tipoEntrega'),200);
     }
 
     public function getPedidoid($id){
@@ -482,7 +483,8 @@ class ApiController extends Controller
         if (is_null($pedido)) {
             return response()->json(["message"=>"Registro no encontrado"],404);
         }
-        return response()->json($pedido->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'),200);
+        // return response()->json($pedido->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'),200);
+        return response()->json($pedido,200);
     }
 
     public function insertPedido(Request $request){
@@ -532,6 +534,12 @@ class ApiController extends Controller
         if (is_null($pedido)) {
             return response()->json(["message"=>"No se pudo eliminar"],404);
         }
+        $pedido->delete();
+        return response()->json(["message"=>"Registro eliminado"],200);
+    }
+
+    public function deletePedido_x_num_pedido($id){
+        $pedido = Order::where('num_pedido', $id);
         $pedido->delete();
         return response()->json(["message"=>"Registro eliminado"],200);
     }

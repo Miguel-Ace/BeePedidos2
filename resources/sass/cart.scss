@@ -106,6 +106,12 @@ p{
                         width: 6rem;
                         padding: .2rem 1rem;
                         font-size: 1.8rem;
+                        background: green;
+                        color: white; 
+                        text-align: center;
+                        &.activo{
+                            background: red;
+                        }
                     }
                 }
                 .delete-product{

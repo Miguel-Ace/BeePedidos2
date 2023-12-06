@@ -9,5 +9,10 @@ class ProductModifier extends Model
 {
     use HasFactory;
     // public $timestamps = false;
-    protected $fillable = ['id_producto','modificador'];
+    protected $fillable = [
+        'id_producto',
+        'modificador',
+        'precio2',
+        'orden_lista'
+    ];
 }

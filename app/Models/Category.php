@@ -10,8 +10,8 @@ class Category extends Model
     use HasFactory;
     // public $timestamps = false;
     protected $fillable = [
-        'categoria',
         'icon_categoria',
+        'categoria',
         'cod_tipo_producto_beesy'
     ];
 }
