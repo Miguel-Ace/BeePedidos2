@@ -36,30 +36,14 @@
         </script>
     @endif
 
-    {{-- @if(session('apiResponse'))
-        <pre>
-            @if (!empty(session('apiResponse')['DATA']['checkout']))
-                <a href="https://{{session('apiResponse')['DATA']['checkout']}}" id="miEnlace">Ir a pagar</a>
-            @else
-                sin checkout
-                {{session('apiResponse')['DESC']}}
-            @endif
-        </pre>
-
-        <script>
-            // Obtén una referencia al elemento de enlace por su ID
-            var enlace = document.getElementById("miEnlace");
-
-            // Define una función para hacer clic en el enlace
-            function hacerClicEnEnlace() {
-            enlace.click();
-            }
-
-            // Llama a la función para hacer clic en el enlace
-            hacerClicEnEnlace();
-        </script>
-    @endif --}}
-
+    <div class="loanding">
+        <div class="bolls">
+            <span class=""></span>
+            <span class=""></span>
+            <span class=""></span>
+        </div>
+    </div>
+    
     <div class="content-table-cart">
         <h1 class="su-orden">Su Pedido</h1>
         <p class="pruebaTexto"></p>
@@ -94,14 +78,9 @@
             <div class="acciones">
                 <a href="{{ url('/'.$idEmpresa) }}" class=""><ion-icon name="arrow-back-outline"></ion-icon> Continuar Comprando</a>
 
-                <button type="button" class="" data-toggle="modal" data-target="#exampleModalCenter">
+                <button type="button" class="procesar" data-toggle="modal" data-target="#exampleModalCenter">
                     <ion-icon name="cash-outline"></ion-icon> Procesar Compra
                 </button>
-                
-                {{-- <a href="{{url('/login-user'.'/'.$idEmpresa)}}" class="inicia-session">
-                    <ion-icon name="cash-outline"></ion-icon>
-                    Procesar Compra
-                </a> --}}
             </div>
         </div>
     </div>
@@ -159,13 +138,13 @@
 
                             <hr>
 
-                            <div class="campo esconder d-none">
+                            {{-- <div class="campo esconder">
                                 <label for="num_pedido" class="form-label">num_pedido</label>
                                 <input type="number" class="num_pedido" id="num_pedido" value="{{$cantidad_pedidos + 1}}">
                                 @error('num_pedido')
                                     <p class="text-error">{{$message}}</p>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <div class="campo esconder d-none">
                                 <label for="fecha_hora" class="form-label">Fecha y Hora</label>
@@ -216,7 +195,7 @@
                             </div> --}}
 
 
-                            <div class="select">
+                            <div class="select d-none">
                                 <label for="id_tipo_pago">Tipo de Pago</label>
                                 <select id="id_tipo_pago">
                                     {{-- <option value="" disabled selected>Seleccione Pago</option> --}}
@@ -264,7 +243,7 @@
 
                             @foreach ($empresas as $empresa)
                                 @if (($empresa->id == $idEmpresa) && ($empresa->tipo_licencia === 'pos'))
-                                    <div class="select">
+                                    <div class="select d-none">
                                         <label for="tipo_documento">Tipo de Factura</label>
                                         <select id="tipo_documento">
                                             <option value="contado">Contado</option>
@@ -302,7 +281,7 @@
                                 @endif
                             @endforeach
 
-                            <div class="campo">
+                            <div class="campo d-none">
                                 <label for="adjuntar_imagen" class="form-label">Adjuntar Comprobante</label>
                                 <input type="file" class="adjuntar_imagen" id="adjuntar_imagen" value="">
                                 @error('adjuntar_imagen')
@@ -354,7 +333,7 @@
                                 @endif
                             @endforeach --}}
 
-                            <label>
+                            <label class="d-none">
                                 <input type="checkbox" id="factura_electronica" value="Si">
                                 ¿Desea factura electrónica?
                             </label>
@@ -376,8 +355,7 @@
                         <div class="modal-footer">
                             <button type="button" class="close-btn" data-dismiss="modal"><ion-icon name="close-outline"></ion-icon> Cerrar</button>
                             <button type="submit" class="finalizar-btn" id="enviarBtn"><ion-icon name="checkmark-done-outline"></ion-icon> Finalizar Compra</button>
-                            <a href="/9" class="ir"></a>
-                            {{-- <button type="submit" class="finalizar-btn" onclick="enviarFormulario()" id="enviarBtn"><ion-icon name="checkmark-done-outline"></ion-icon> Finalizar Compra</button> --}}
+                            <a href="/" class="ir"></a>
                         </div>
                     </form>
                     @endif
@@ -392,27 +370,50 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 
     <script>
+        const cantPedidos = '{!! json_encode($cantidad_pedidos) !!}'
         const usuario = '{!! json_encode($usuarioAuth) !!}'
         const pedidos = JSON.parse('{!! json_encode($pedidos) !!}')
         const detallePedidos = JSON.parse('{!! json_encode($detalle_pedidos) !!}')
-        let idProducts = []
+        const procesar = document.querySelector('.procesar')
+        const finalizarCompra = document.querySelector('#enviarBtn')
+        // let idProducts = []
 
-        pedidos.forEach(item => {
-            if (item.id_cliente == parseInt(usuario) && item.cerrar_pedido == 0) {
-                mandarPedido(item.num_pedido)
-            }
-        });
+        // pedidos.forEach(item => {
+        //     if (item.id_cliente == parseInt(usuario) && item.cerrar_pedido == 0) {
+        //         mandarPedido(item.num_pedido)
+        //     }
+        // });
 
-        function mandarPedido(numPedido) {
-            detallePedidos.forEach(item => {
-                if (item.num_pedido == numPedido) {
-                    // console.log(item.id_producto)
-                    idProducts.push({id:item.id})
-                }
-            })
+        // function mandarPedido(numPedido) {
+        //     detallePedidos.forEach(item => {
+        //         if (item.num_pedido == numPedido) {
+        //             // console.log(item.id_producto)
+        //             idProducts.push({id:item.id})
+        //         }
+        //     })
+        // }
+
+        // sessionStorage.setItem('idProducts', JSON.stringify(idProducts))
+
+        finalizarCompra.addEventListener('click', () => {
+            numAleatorio()
+        })
+
+        function numAleatorio() {
+            const aleatorio = Math.floor(Math.random() * 100000 + 1)
+    
+            const saberIdPedido = pedidos.find(x => x.num_pedido == aleatorio)
+
+            confirmarPedido(saberIdPedido,aleatorio)
         }
 
-        sessionStorage.setItem('idProducts', JSON.stringify(idProducts))
+        function confirmarPedido(saberIdPedido,aleatorio) {
+            if (saberIdPedido == undefined) {
+                sessionStorage.setItem('ordenAl', JSON.stringify(aleatorio))
+            }else{
+                numAleatorio()
+            }
+        }
     </script>
 </body>
 </html>

@@ -536,9 +536,34 @@ img{
                     position: relative;
                     transition: .3s ease;
                     border: 1px solid white;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
                     &:hover{
                         // background-color: rgb(248, 248, 248);
                         border: 1px solid #1A5276;
+                    }
+                    .selectCantidades{
+                        position: absolute;
+                        bottom: 5rem;
+                        // background-color: red;
+                        width: 10rem;
+                        text-align: center;
+                        input{
+                            width: 4rem;
+                            text-align: center;
+                        }
+                        button{
+                            border: none;
+                            background: none;
+                            transition: .3s ease;
+                            border-radius: 20%;
+                            &:hover{
+                                box-shadow: inset 0rem 0rem .3rem;
+                                background-color: #7b7b7b;
+                                color: white;
+                            }
+                        }
                     }
                     .content-img{
                         transition: .2s ease;

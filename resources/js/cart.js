@@ -20,18 +20,27 @@ if (sessionStorage.getItem('productos')) {
     arr_products = JSON.parse(sessionStorage.getItem('productos'))
 
     for (const producto of arr_products) {
+        const precio = producto.precio
         const iva = (producto.precio * 0.10) * producto.cantidad
         const subtotal = producto.precio * producto.cantidad
         const total = iva + subtotal
+        let descuento
+
+        if (producto.descuento == null) {
+            descuento = '-'    
+        }else{
+            descuento = producto.descuento
+        }
 
         subTotalCart += subtotal
-        descuentoCart += producto.descuento
+        descuentoCart += producto.descuento == null ? '' : producto.descuento
         ivaCart += iva
         totalCart += total
 
         tablaCart.innerHTML += `
             <tr>
                 <td class="imagen">
+                    <span style="display:none" class="id">${producto.id}</span>
                     <div>
                         <img src="${producto.imagen}" width="100" height="100" class="img-responsive" alt="">
                     </div>
@@ -43,15 +52,15 @@ if (sessionStorage.getItem('productos')) {
                     </div>
                 </td>
 
-                <td data-th="precio" class="precio">${producto.moneda} ${producto.precio}</td>
+                <td data-th="precio" class="precio">${producto.moneda} ${precio}</td>
 
-                <td data-th="descuento" class="descuento">${producto.descuento}</td>
+                <td data-th="descuento" class="descuento">${descuento}</td>
 
                 <td data-th="cantidad" class="cantidad">
                     <div class="input-group">
                         <button type="button" class="btn btn-outline-secondary quantity-minus">-</button>
                         <input type="text" disabled="" value="${producto.cantidad}" class="form-control quantity cart_update" min="1">
-                        <button type="button" class="btn btn-outline-secondary quantity-plus" disabled="" style="background: gray; color: white;">+</button>
+                        <button type="button" class="btn btn-outline-secondary quantity-plus">+</button>
                     </div>
                 </td>
 

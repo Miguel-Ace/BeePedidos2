@@ -46,7 +46,7 @@ Route::get('/detalle_pedido', [ApiController::class, 'getDetallePedido'])->middl
 Route::get('/detalle_pedido/{id}', [ApiController::class, 'getDetallePedidoid'])->middleware('auth:sanctum');
 Route::post('/detalle_pedido/insert', [ApiController::class, 'insertDetallePedidoo'])->middleware('auth:sanctum');
 Route::put('/detalle_pedido/update/{id}', [ApiController::class, 'updateDetallePedido'])->middleware('auth:sanctum');
-Route::delete('/detalle_pedido/delete/{id}', [ApiController::class, 'deleteDetallePedido'])->middleware('auth:sanctum');
+Route::delete('/detalle_pedido/delete', [ApiController::class, 'deleteDetallePedido'])->middleware('auth:sanctum');
 
 // ================ Dirección Cliente =====================
 Route::get('/direccion_cliente', [ApiController::class, 'getDireccionesCliente'])->middleware('auth:sanctum');

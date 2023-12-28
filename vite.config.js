@@ -18,6 +18,7 @@ export default defineConfig({
                 'resources/js/add_producto.js',
                 'resources/js/enviar_formulario.js',
                 'resources/js/botones_cart.js',
+                'resources/js/botones_producto.js',
             ],
             refresh: true,
         }),

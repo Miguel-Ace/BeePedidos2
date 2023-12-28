@@ -2,15 +2,37 @@ const productos = document.querySelectorAll('.productos')
 const agregarProdut = document.querySelector('.cart-info')
 const dropdownCarrito = document.querySelector('.dropdown-carrito .productos-agregados')
 const textPrecio = document.querySelector('.text-precio')
+
 let sumarCart = 0
 let arr_products = []
 
 // Si existen productos en el sessionStorage lo agrega al array y lo pone en el carrito
+setTimeout(() => {
 if (sessionStorage.getItem('productos')) {
-    arr_products = JSON.parse(sessionStorage.getItem('productos'))
-    agregarOrden()
-}
+        arr_products = JSON.parse(sessionStorage.getItem('productos'))
+        agregarOrden()
+        comparar()
+    }
+}, 500);
 
+// Mejorar
+function comparar() {
+    arr_products.forEach(item => {
+          identificarId(item.id,item.cantidad)
+
+          function identificarId(id,cantidad) {
+            productos.forEach(item => {
+                const quantity = item.querySelector('.selectCantidades .quantity')
+                if (parseInt(item.querySelector('.id-producto').textContent.trim()) == id) {
+                    quantity.value = cantidad
+                }
+            });
+          }
+    })
+}
+// Mejorar
+
+// Si no hay productos se ejecuta un mensaje
 mensajeSinProducts()
 function mensajeSinProducts() {
     if (dropdownCarrito.innerHTML == '') {
@@ -29,38 +51,125 @@ productos.forEach(item => {
     const existencia = item.querySelector('.existencia span');
     const categoria = item.querySelector('.categoria');
     const cadProductoBeesy = item.querySelector('.cadProductoBeesy');
+
+    const menos = item.querySelector('.selectCantidades .menos');
+    const mas = item.querySelector('.selectCantidades .mas');
+    const quantity = item.querySelector('.selectCantidades .quantity')
     
     const btnCart = item.querySelector('.button')
 
-    btnCart.addEventListener('click', () => {
+    let cantidadInput
 
+    btnCart.addEventListener('click', () => {
         // Extraer el indice del arreglo para encontrar el objeto
         const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
 
         // Si el indice es -1 entonces el producto no ha sido agregado
         // De lo contrario se le suma 1 a cantidad
         if (indice == -1) {
+            if (quantity.value > 0 && quantity.value <= parseInt(existencia.textContent.trim())) {
+                cantidadInput = quantity.value
+            }else{
+                cantidadInput = 1
+                quantity.value = cantidadInput
+            }
             arr_products.push({
-                id: id.textContent.trim(),
+                id: parseInt(id.textContent.trim()),
                 imagen: imagen,
                 nombre: nombre.textContent.trim(),
                 descuento: descuento,
                 descripcion: descripcion.textContent.trim(),
                 precio: parseFloat(precio.textContent.trim().replace(/,/g, '')),
                 moneda: moneda.textContent.trim(),
-                existencia: existencia.textContent.trim(),
+                existencia: parseInt(existencia.textContent.trim()),
                 categoria: categoria.textContent.trim(),
-                cadProductoBeesy: cadProductoBeesy.textContent.trim(),
-                cantidad: 1
+                // cadProductoBeesy: cadProductoBeesy.textContent.trim(),
+                quantity: parseInt(quantity.value),
+                cantidad: parseInt(cantidadInput)
             })
             agregarOrden()
             conProducto()
+            comprobarExis()
         }else{
             arr_products[indice].cantidad++;
-            // arr_products[indice].precio = arr_products[indice].precio + parseFloat(precio.textContent.trim().replace(/,/g, ''));
+            quantity.value = arr_products[indice].cantidad
             agregarOrden()
+            comprobarExis()
         }
     })
+
+    menos.addEventListener('click', () => {
+        const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
+        // Si el indice es diferente -1 entonces el producto ha sido agregado y se actualiza existencias
+        quantity.value--
+        if (indice != -1) {
+            if (quantity.value > 0 && quantity.value <= parseInt(existencia.textContent.trim())) {
+                arr_products[indice].quantity = quantity.value;
+                arr_products[indice].cantidad = quantity.value;
+            }else{
+                arr_products[indice].quantity = parseInt(existencia.textContent.trim());
+                arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+            }
+            agregarOrden()
+            comprobarExis()
+        }
+    })
+
+    mas.addEventListener('click', () => {
+        const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
+        // Si el indice es diferente -1 entonces el producto ha sido agregado y se actualiza existencias
+        quantity.value++
+        if (indice != -1) {
+            if (quantity.value > 0 && quantity.value <= parseInt(existencia.textContent.trim())) {
+                arr_products[indice].quantity = quantity.value;
+                arr_products[indice].cantidad = quantity.value;
+            }else{
+                arr_products[indice].quantity = parseInt(existencia.textContent.trim());
+                arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+            }
+            agregarOrden()
+            comprobarExis()
+        }
+    })
+
+    quantity.addEventListener('keyup', () => {
+        const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
+        // Si el indice es diferente -1 entonces el producto ha sido agregado y se actualiza existencias
+        if (indice != -1) {
+            if (quantity.value > 0 && quantity.value <= parseInt(existencia.textContent.trim())) {
+                arr_products[indice].quantity = quantity.value;
+                arr_products[indice].cantidad = quantity.value;
+            }else{
+                arr_products[indice].quantity = parseInt(existencia.textContent.trim());
+                arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+            }
+            agregarOrden()
+            comprobarExis()
+        }
+    })
+
+    setTimeout(() => {
+        comprobarExis()
+    }, 1000);
+    function comprobarExis() {
+        const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
+        // if (indice != -1) {
+        //     if (quantity.value < 0) {
+        //         quantity.value = 1
+        //     }
+        //     arr_products[indice].quantity = quantity.value;
+        //     arr_products[indice].cantidad = quantity.value;
+        //     agregarOrden()
+        // }
+
+        if (quantity.value >= parseInt(existencia.textContent.trim()) || quantity.value < 0) {
+            btnCart.style = "opacity:.5"
+            btnCart.disabled = true
+        }else{
+            btnCart.style = ""
+            btnCart.disabled = false
+        }
+    }
 });
 
 function agregarOrden() {
@@ -73,19 +182,21 @@ function agregarOrden() {
         dropdownCarrito.innerHTML += `
         <div class="detalle-carrito">
             <span class="id d-none">${producto.id}</span>
+            <span class="cantidad-input d-none">${producto.quantity}</span>
+            <span class="existencia-input d-none">${producto.existencia}</span>
             <div class="detalle-img">
                 <img src="${producto.imagen}" width="100">
                 <ion-icon name="trash-outline" class="vaciar"></ion-icon>
             </div>
             <div class="detalle-producto">
                 <p>${producto.nombre}</p>
-                <span class="price text-info">${producto.moneda} ${precio_x_cantidad.toFixed(2)} </span> Cantidad: <span class="count">${producto.cantidad}</span>
+                <span class="price text-info">${producto.moneda} ${precio_x_cantidad.toLocaleString()} </span> Cantidad: <span class="count">${producto.cantidad}</span>
             </div>
         </div>
     `
 
-    sumarCart += precio_x_cantidad
-    textPrecio.textContent = sumarCart
+    // sumarCart += precio_x_cantidad
+    mostrarPrecioTotal()
     }
 
     // Crear un sessionStorage y pasarle todo el arreglo
@@ -93,6 +204,16 @@ function agregarOrden() {
 
     // Ejecutar una función que permite saber cuantos productos hay agregado y de esa forma poder eliminarlos
     borrarProducto()
+}
+
+function mostrarPrecioTotal() {
+    sumarCart = 0
+    for (const producto of arr_products) {
+        const precio_x_cantidad = producto.precio * producto.cantidad
+        sumarCart += precio_x_cantidad
+    }
+    textPrecio.textContent = sumarCart.toLocaleString()
+
 }
 
 function borrarProducto() {
@@ -107,23 +228,25 @@ function borrarProducto() {
             arr_products.splice(indiceProductCart, 1)
             agregarOrden()
             mensajeSinProducts()
+            mostrarPrecioTotal()
+            location.reload()
         }
     });
 
     conProducto()
 }
 
+conProducto()
 function conProducto() {
     // Bloquear btn de confirmar pedido
     const verCarrito = document.querySelector('.ver-carrito')
     const a1 = verCarrito.querySelector('a:nth-child(1)')
-    const a2 = verCarrito.querySelector('a:nth-child(2)')
 
-    if (dropdownCarrito.innerHTML != '') {
-        a2.classList.add('d-none')
-        a1.classList.remove('d-none')
+    if (arr_products.length == 0) {
+        a1.style = "opacity:.5;cursor: no-drop"
+        a1.disabled = true
     }else{
-        a1.classList.add('d-none')
-        a2.classList.remove('d-none')
+        a1.style = ""
+        a1.disabled = false
     }
 }

@@ -16,6 +16,7 @@
             <p class="titulo">Store de pedidos</p>
             <p class="breve-descrip">Pedí comida a través de nuestra plataforma. De tu restaurante favorito a la puerta de tu casa.</p>
             <a href="#contenedor" class="btn-select-empresa">Empieza Ya!</a>
+            <a href="/9" class="ir"></a>
         </div>
     </div>
 
@@ -62,12 +63,19 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
+        const irBtn = document.querySelector('.ir')
         sessionStorage.removeItem('sumatoria');
         sessionStorage.removeItem('idCategoria')
-        sessionStorage.removeItem('numOrder')
+        
         sessionStorage.removeItem('productos')
+        sessionStorage.removeItem('numOrder')
         sessionStorage.removeItem('idProducts')
-        sessionStorage.removeItem('idPedido')
+        sessionStorage.removeItem('pedido')
+
+        if (JSON.parse(sessionStorage.getItem('estatus'))) {
+            sessionStorage.setItem('estatus', JSON.stringify(false));
+            irBtn.click();
+        }
     </script>
 </body>
 </html>

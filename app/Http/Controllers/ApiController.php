@@ -212,11 +212,22 @@ class ApiController extends Controller
     }
 
     public function insertDetallePedidoo(Request $request){
-        $detalle_pedido = Detail::create($request->all());
-        if (is_null($detalle_pedido)) {
-            return response()->json(["message"=>"No se pudo insertar"],404);
+        $detalle_pedido = $request->all();
+
+        foreach ($detalle_pedido as $detalleData) {
+            Detail::create($detalleData);
         }
-        return response()->json($detalle_pedido,200);
+
+        return response()->json([
+            "message" => "Registro insertados con éxito.",
+            "status" => "OK"
+        ], 200);
+        
+        // $detalle_pedido = Detail::create($request->all());
+        // if (is_null($detalle_pedido)) {
+        //     return response()->json(["message"=>"No se pudo insertar"],404);
+        // }
+        // return response()->json($detalle_pedido,200);
     }
 
     public function updateDetallePedido(Request $request, $id){
@@ -228,13 +239,25 @@ class ApiController extends Controller
         return response()->json($detalle_pedido,200);
     }
 
-    public function deleteDetallePedido($id){
-        $detalle_pedido = Detail::find($id);
-        if (is_null($detalle_pedido)) {
-            return response()->json(["message"=>"No se pudo eliminar"],404);
+    public function deleteDetallePedido(Request $request){
+        $ids = $request->all();
+
+        foreach ($ids as $id) {
+            $detalle_pedido = Detail::find($id);
+            
+            $detalle_pedido->delete();
+            // if (!is_null($detalle_pedido)) {
+            // }
         }
-        $detalle_pedido->delete();
-        return response()->json(["message"=>"Registro eliminado"],200);
+    
+        return response()->json(["message" => "Registros eliminados"], 200);
+
+        // $detalle_pedido = Detail::find($id);
+        // if (is_null($detalle_pedido)) {
+        //     return response()->json(["message"=>"No se pudo eliminar"],404);
+        // }
+        // $detalle_pedido->delete();
+        // return response()->json(["message"=>"Registro eliminado"],200);
     }
 
      // =========== Direcciones Cliente ===========

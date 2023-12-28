@@ -1,5 +1,5 @@
 @extends('layout.app')
-@vite(['resources/js/products.js','resources/js/add_producto.js','resources/js/botones_cart.js'])
+@vite(['resources/js/products.js','resources/js/add_producto.js','resources/js/botones_producto.js'])
 
 {{-- <pre>
     {{$ultimoValue}}
@@ -428,6 +428,12 @@
                     
                     <div class="existencia">Exist: <span>{{$producto->existencia}}</span></div>
 
+                    <div class="selectCantidades">
+                        <button class="menos">-</button>
+                        <input type="text" class="quantity" placeholder="0" value="0">
+                        <button class="mas">+</button>
+                    </div>
+
                     <div class="categoria d-none">{{$producto->id_categoria}}</div>
                     <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
                     {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
@@ -453,6 +459,12 @@
 
                     <div class="existencia">Exist: <span>{{$producto->existencia}}</span></div>
 
+                    <div class="selectCantidades">
+                        <button class="menos">-</button>
+                        <input type="text" class="quantity" placeholder="0" value="0">
+                        <button class="mas">+</button>
+                    </div>
+                    
                     <div class="categoria d-none">{{$producto->id_categoria}}</div>
                     <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
                     {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
@@ -523,85 +535,6 @@
         }
     </script>
 
-    {{-- <script>
-        // sessionStorage.removeItem('sumatoria');
-        const empresas = JSON.parse('{!! json_encode($empresas) !!}')
-        const idEmpresa = JSON.parse('{!! $idEmpresa !!}')
-        const btnAgregar = document.querySelectorAll('.button')
-        let sumatoria = JSON.parse(sessionStorage.getItem('sumatoria')) || 0
-        // console.log(empresas[idEmpresa - 1].cantidad_pedidos);
-
-        // ===============================================================
-        let nuevoArregloPedidos = []
-        const pedidos = JSON.parse('{!! json_encode($pedidos) !!}');
-
-        if ('{!! $usuarioAuth !!}' != 0) {
-            pedidos.forEach(item => {
-                if (item.id_empresa == '{!! $idEmpresa !!}' && item.id_cliente == '{!! $usuarioAuth !!}') {
-                    // console.log(item);
-                    nuevoArregloPedidos.push(item)
-                }
-            })
-
-            const fechaPedido = nuevoArregloPedidos[nuevoArregloPedidos.length - 1].fecha_hora 
-    
-            const fecha1 = new Date(fechaPedido).getTime();
-            const fecha2 = new Date().getTime();
-    
-            const diferenciaEnMilisegundos = fecha2 - fecha1;
-            const diferenciaEnDias = Math.floor(diferenciaEnMilisegundos / (1000 * 60 * 60 * 24));
-    
-            // console.log(diferenciaEnDias);
-
-            if (diferenciaEnDias > 30 && empresas[idEmpresa - 1].cantidad_pedidos != 0) {
-                empresas.forEach(item => {
-                    if (item.id == idEmpresa) {
-                        // console.log(item.cantidad_pedidos)
-                        cantidadPedidos(item.cantidad_pedidos)
-                    }
-                });
-    
-                function cantidadPedidos(cantidad) {
-                    btnAgregar.forEach(item => {
-                        item.addEventListener('click', () => {
-                            sumatoria++
-                            sessionStorage.setItem('sumatoria',sumatoria)
-                            // console.log('click');
-                        })
-                    });
-                }
-                // console.log(sumatoria);
-                console.log("llevar minimo de productos");
-            } else {
-                console.log("no hay minimo");
-            }
-        }else{
-
-            if (empresas[idEmpresa - 1].cantidad_pedidos != 0) {
-                empresas.forEach(item => {
-                    if (item.id == idEmpresa) {
-                        // console.log(item.cantidad_pedidos)
-                        cantidadPedidos(item.cantidad_pedidos)
-                    }
-                });
-    
-                function cantidadPedidos(cantidad) {
-                    btnAgregar.forEach(item => {
-                        item.addEventListener('click', () => {
-                            sumatoria++
-                            sessionStorage.setItem('sumatoria',sumatoria)
-                            // console.log('click');
-                        })
-                    });
-                }
-                // console.log(sumatoria);
-                // console.log("llevar minimo de productos");
-            } else {
-                // console.log("no hay minimo");
-            }
-        }
-    </script> --}}
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
@@ -615,78 +548,71 @@
     </script>
 
     <script>
-  
         const pedidos = JSON.parse('{!! json_encode($pedidos) !!}')
         const usuario = '{!! json_encode($usuarioAuth) !!}'
+        const monedas = '{!! json_encode($moneda) !!}'
         const detallePedidos = JSON.parse('{!! json_encode($detalle_pedidos) !!}')
+        const productosBd = JSON.parse('{!! json_encode($productos) !!}')
 
-        let arr_idPedidos = []
-        let idProducts = []
         let arr_products = []
+        let arr_id_products = []
+        let estado
 
-        pedidos.forEach(item => {
-            if (item.id_cliente == parseInt(usuario) && item.cerrar_pedido == 0) {
-                sessionStorage.setItem('idPedido', JSON.stringify(item.id))
-                // sessionStorage.setItem('numOrder', JSON.stringify(numPedido))
-                mandarPedido(item.num_pedido)
-            }
-        });
-
-        // console.log('hola');
-        function mandarPedido(numPedido) {
-            detallePedidos.forEach(item => {
-                if (item.num_pedido == numPedido) {
-                    // console.log(item.id_producto)
-                    idProducts.push({id:item.id})
-                    arr_idPedidos.push({id:numPedido})
-                    // sessionStorage.setItem('numOrder', JSON.stringify(numPedido))
-                    const valor = item.precio * item.cantidad
-                    agregarAlArreglo(item.id_producto, item.cantidad, valor)
-                }
-                // else{
-                //     sessionStorage.setItem('numOrder', JSON.stringify(''))
-                //     sessionStorage.setItem('productos', JSON.stringify(''))
-                // }
-            })
-        }
-
-        function agregarAlArreglo(idProduct, cantidadProduct, precioProduct) {
-            productos.forEach(item => {
-                const id = item.querySelector('.id-producto');
-                const imagen = item.querySelector('.content-img img').src;
-                const nombre = item.querySelector('.descuento p');
-                const descuento = item.querySelector('.span');
-                const descripcion = item.querySelector('.descripcion');
-                // const precio = item.querySelector('.precio span:nth-child(2)');
-                const moneda = item.querySelector('.precio .moneda');
-                const existencia = item.querySelector('.existencia span');
-                const categoria = item.querySelector('.categoria');
-                const cadProductoBeesy = item.querySelector('.cadProductoBeesy');
-    
-                if (idProduct == id.textContent.trim()) {
-                    arr_products.push({
-                        id: id.textContent.trim(),
-                        imagen: imagen,
-                        nombre: nombre.textContent.trim(),
-                        descuento: descuento,
-                        descripcion: descripcion.textContent.trim(),
-                        precio: precioProduct,
-                        moneda: moneda.textContent.trim(),
-                        existencia: existencia.textContent.trim(),
-                        categoria: categoria.textContent.trim(),
-                        cadProductoBeesy: cadProductoBeesy.textContent.trim(),
-                        cantidad: cantidadProduct
-                    })
-                }
-            })
-        }
-        
         if (!sessionStorage.getItem('productos') || JSON.parse(sessionStorage.getItem('productos')).length == 0) {
-            sessionStorage.setItem('productos', JSON.stringify(arr_products))
-            sessionStorage.setItem('idProducts', JSON.stringify(idProducts))
+            estado = true
+        }else{
+            estado = false
         }
 
-        sessionStorage.setItem('numOrder', JSON.stringify(arr_idPedidos[arr_idPedidos.length - 1].id))
+        // console.time('filter pedidos')
+        // console.timeEnd('filter pedidos')
+        const pedidosCerrados = pedidos.filter(x => x.cerrar_pedido == 0).filter(x => x.id_cliente == usuario)
+
+        sessionStorage.setItem('numOrder', JSON.stringify(pedidosCerrados[0].num_pedido))
+        sessionStorage.setItem('pedido', JSON.stringify(pedidosCerrados[0].id))
+
+        // console.time('filter detalle')
+        // console.timeEnd('filter detalle')
+        const detalleFiltrado = detallePedidos.filter(x => x.num_pedido == pedidosCerrados[0].num_pedido)
+
+        const pedidosIndexados = productosBd.reduce((acc,el) => {
+            acc[el.id] = el
+            return acc
+        }, {})
+
+        const productosMap = detalleFiltrado.map(item => ({
+            ...item,
+            product: pedidosIndexados[item.id_producto]
+        }))
+        
+        for (const i of productosMap) {
+            arr_id_products.push({
+                id: i.id,
+            })
+            arr_products.push({
+                id: i.product.id,
+                imagen: i.product.url_imagen,
+                nombre: i.product.producto,
+                precio: i.product.precio,
+                moneda: monedas.replace(/"/g, ''),
+                descripcion: i.product.descripcion,
+                existencia: i.product.existencia,
+                descuento: i.product.descuento,
+                cantidad: i.cantidad
+            })
+            agregarProductsSesion()
+            agregarIdProductsSesion()
+        }
+
+        function agregarProductsSesion() {
+            if (estado) {
+                sessionStorage.setItem('productos', JSON.stringify(arr_products))
+            }
+        }
+
+        function agregarIdProductsSesion() {
+            sessionStorage.setItem('idProducts', JSON.stringify(arr_id_products))
+        }
     </script>
 @endsection
 
@@ -704,7 +630,6 @@
 
             <div class="ver-carrito">
                 <a href="{{ url('/cart'.'/'.$idEmpresa) }}" class="confirmar">CONFIRMAR PEDIDO</a>
-                <a class="confirmar deshabilitado">CONFIRMAR PEDIDO</a>
             </div>
         </div>
     </div>

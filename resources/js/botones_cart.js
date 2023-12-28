@@ -1,45 +1,99 @@
-const buttons = document.querySelector('.button')
-const counts = document.querySelectorAll('.detalle-carrito')
-const products = document.querySelectorAll('.productos')
+const productsCart = document.querySelectorAll('#cart tbody tr')
+let arr_products = []
 
-setTimeout(() => {
-    saberCantidad()
-}, 300);
-
-buttons.addEventListener('click', () => {
-    boton.disabled = true
-    saberCantidad()
-    setTimeout(() => {
-        boton.disabled = false
-    }, 300);
-})
-
-function saberCantidad() {
-    counts.forEach(item => {
-        const idcart = item.querySelector('.id')
-        const cantidad = item.querySelector('.detalle-producto .count')
-        // console.log(item);
-        pasarDatos(idcart.textContent, cantidad.textContent)
-    });
+// Si existen productos en el sessionStorage lo agrega al array y lo pone en el carrito
+if (sessionStorage.getItem('productos')) {
+    arr_products = JSON.parse(sessionStorage.getItem('productos'))
 }
 
-function pasarDatos(idCart, existencias) {
-    products.forEach(item => {
-        const id = item.querySelector('.id-producto').textContent
-        const boton = item.querySelector('.button')
-        const existencia = item.querySelector('.existencia span').textContent
-        const nombre = item.querySelector('.descuento p')
+productsCart.forEach(item => {
+    const id = item.querySelector('.id').textContent
+    const quantityMinus = item.querySelector('.quantity-minus')
+    const quantity = item.querySelector('.quantity')
+    const quantityPlus = item.querySelector('.quantity-plus')
+    const existencia = item.querySelector('.existencia p').textContent
+    const cartRemove = item.querySelector('.cart_remove')
+    
+    const indice = arr_products.findIndex(product => product.id == id.trim());
+    // console.log(cartRemove);
 
-        if (parseInt(idCart) == parseInt(id)) {
-            if (parseInt(existencias) == parseInt(existencia)) {
-                console.log(item);
-                boton.disabled = true
-                boton.style = 'opacity:.5'
-            }
-            // console.log(existencia);
-            // console.log(existencias);
+    cartRemove.addEventListener('click', () => {
+        arr_products.splice(indice, 1)
+        sessionStorage.setItem('productos', JSON.stringify(arr_products));
+        location.reload()
+    })
+
+    estadoBtn()
+    quantityPlus.addEventListener('click', () => {
+        quantity.value++
+        estadoBtn()
+        // location.reload()
+    })
+
+    quantityMinus.addEventListener('click', () => {
+        quantity.value--
+        estadoBtn()
+        // location.reload()
+    })
+
+    function estadoBtn() {
+        if (quantity.value == 1) {
+            quantityPlus.style = ''
+            quantityPlus.disabled = false
+    
+            quantityMinus.style = 'background: gray; color: white'
+            quantityMinus.disabled = true
+
+            cambiarCantidad(indice)
         }
-        // boton.addEventListener('click', () => {
-        // })
-    });
-}
+    
+        if (quantity.value == existencia) {
+            quantityMinus.style = ''
+            quantityMinus.disabled = false
+    
+            quantityPlus.style = 'background: gray; color: white'
+            quantityPlus.disabled = true
+
+            cambiarCantidad(indice)
+        }
+
+        if (quantity.value != existencia && quantity.value != 1) {
+            quantityMinus.style = ''
+            quantityMinus.disabled = false
+    
+            quantityPlus.style = ''
+            quantityPlus.disabled = false
+
+            cambiarCantidad(indice)
+        }
+    }
+
+    function cambiarCantidad(indice) {
+        arr_products[indice].cantidad = quantity.value;
+        sessionStorage.setItem('productos', JSON.stringify(arr_products));
+        // console.log(arr_products);
+    }
+    
+});
+
+
+const finalizarBtn = document.querySelector('.finalizar-btn')
+const ballCarga = document.querySelector('.loanding')
+const btnClose = document.querySelector('.close')
+const sp1 = document.querySelector('.bolls span:nth-child(1)')
+const sp2 = document.querySelector('.bolls span:nth-child(2)')
+const sp3 = document.querySelector('.bolls span:nth-child(3)')
+
+finalizarBtn.addEventListener('click', () => {
+
+    ballCarga.classList.add('activo')
+    btnClose.click()
+
+    sp1.classList.add('sp1')
+    setTimeout(() => {
+        sp2.classList.add('sp2')
+    }, 750);
+    setTimeout(() => {
+        sp3.classList.add('sp3')
+    }, 1000);
+})

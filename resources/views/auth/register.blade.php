@@ -136,7 +136,7 @@
 
         <input type="submit" value="Crear Cuenta" class="btn-crear">
         <a href="{{url('/login')}}">Inicia Sesión</a>
-        <a href="{{url('/1')}}">Tienda</a>
+        <a href="{{url('/9')}}">Tienda</a>
     </form>
 </div>
 
