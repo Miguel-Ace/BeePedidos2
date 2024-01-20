@@ -2,7 +2,9 @@ const productos = document.querySelectorAll('.productos')
 const agregarProdut = document.querySelector('.cart-info')
 const dropdownCarrito = document.querySelector('.dropdown-carrito .productos-agregados')
 const textPrecio = document.querySelector('.text-precio')
+const spanMostrarTotal = document.querySelector('.totalProductosAgregados')
 
+let totalProductosAgregados = 0
 let sumarCart = 0
 let arr_products = []
 
@@ -50,7 +52,7 @@ productos.forEach(item => {
     const moneda = item.querySelector('.precio .moneda');
     const existencia = item.querySelector('.existencia span');
     const categoria = item.querySelector('.categoria');
-    const cadProductoBeesy = item.querySelector('.cadProductoBeesy');
+    const iva = item.querySelector('.iva');
 
     const menos = item.querySelector('.selectCantidades .menos');
     const mas = item.querySelector('.selectCantidades .mas');
@@ -83,7 +85,7 @@ productos.forEach(item => {
                 moneda: moneda.textContent.trim(),
                 existencia: parseInt(existencia.textContent.trim()),
                 categoria: categoria.textContent.trim(),
-                // cadProductoBeesy: cadProductoBeesy.textContent.trim(),
+                iva: iva.textContent.trim(),
                 quantity: parseInt(quantity.value),
                 cantidad: parseInt(cantidadInput)
             })
@@ -101,14 +103,18 @@ productos.forEach(item => {
     menos.addEventListener('click', () => {
         const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
         // Si el indice es diferente -1 entonces el producto ha sido agregado y se actualiza existencias
-        quantity.value--
+        if (quantity.value > 0) {
+            quantity.value--
+        }
         if (indice != -1) {
             if (quantity.value > 0 && quantity.value <= parseInt(existencia.textContent.trim())) {
                 arr_products[indice].quantity = quantity.value;
                 arr_products[indice].cantidad = quantity.value;
+                mas.disabled = false
             }else{
-                arr_products[indice].quantity = parseInt(existencia.textContent.trim());
-                arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+                // arr_products[indice].quantity = parseInt(existencia.textContent.trim());
+                // arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+                menos.disabled = true
             }
             agregarOrden()
             comprobarExis()
@@ -118,14 +124,18 @@ productos.forEach(item => {
     mas.addEventListener('click', () => {
         const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
         // Si el indice es diferente -1 entonces el producto ha sido agregado y se actualiza existencias
-        quantity.value++
+        if (quantity.value < parseInt(existencia.textContent.trim())) {
+            quantity.value++
+        }
         if (indice != -1) {
             if (quantity.value > 0 && quantity.value <= parseInt(existencia.textContent.trim())) {
                 arr_products[indice].quantity = quantity.value;
                 arr_products[indice].cantidad = quantity.value;
+                menos.disabled = false
             }else{
-                arr_products[indice].quantity = parseInt(existencia.textContent.trim());
-                arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+                // arr_products[indice].quantity = parseInt(existencia.textContent.trim());
+                // arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+                mas.disabled = true
             }
             agregarOrden()
             comprobarExis()
@@ -140,8 +150,8 @@ productos.forEach(item => {
                 arr_products[indice].quantity = quantity.value;
                 arr_products[indice].cantidad = quantity.value;
             }else{
-                arr_products[indice].quantity = parseInt(existencia.textContent.trim());
-                arr_products[indice].cantidad = parseInt(existencia.textContent.trim());
+                arr_products[indice].quantity = 1;
+                arr_products[indice].cantidad = 1;
             }
             agregarOrden()
             comprobarExis()
@@ -152,7 +162,7 @@ productos.forEach(item => {
         comprobarExis()
     }, 1000);
     function comprobarExis() {
-        const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
+        // const indice = arr_products.findIndex(product => product.id == id.textContent.trim());
         // if (indice != -1) {
         //     if (quantity.value < 0) {
         //         quantity.value = 1
@@ -174,9 +184,12 @@ productos.forEach(item => {
 
 function agregarOrden() {
     dropdownCarrito.innerHTML = ''
+    totalProductosAgregados = 0
     
     for (const producto of arr_products) {
 
+        totalProductosAgregados++
+        mostrarCantidadproducts()
         const precio_x_cantidad = producto.precio * producto.cantidad
 
         dropdownCarrito.innerHTML += `
@@ -249,4 +262,8 @@ function conProducto() {
         a1.style = ""
         a1.disabled = false
     }
+}
+
+function mostrarCantidadproducts() {
+    spanMostrarTotal.textContent = totalProductosAgregados
 }

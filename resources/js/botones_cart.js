@@ -27,13 +27,13 @@ productsCart.forEach(item => {
     quantityPlus.addEventListener('click', () => {
         quantity.value++
         estadoBtn()
-        // location.reload()
+        location.reload()
     })
 
     quantityMinus.addEventListener('click', () => {
         quantity.value--
         estadoBtn()
-        // location.reload()
+        location.reload()
     })
 
     function estadoBtn() {
@@ -63,6 +63,17 @@ productsCart.forEach(item => {
     
             quantityPlus.style = ''
             quantityPlus.disabled = false
+
+            cambiarCantidad(indice)
+        }
+
+        // Cambio 16-01-2024
+        if (quantity.value == 1 && existencia == 1) {
+            quantityMinus.style = 'background: gray; color: white'
+            quantityMinus.disabled = true
+    
+            quantityPlus.style = 'background: gray; color: white'
+            quantityPlus.disabled = true
 
             cambiarCantidad(indice)
         }

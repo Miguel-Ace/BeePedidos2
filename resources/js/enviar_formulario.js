@@ -1,8 +1,14 @@
 const enviarBtn = document.querySelector('.modal-footer #enviarBtn')
 const irBtn = document.querySelector('.ir')
+const procesar = document.querySelector('.procesar')
 
 let arr_products = JSON.parse(sessionStorage.getItem('productos'))
 let arr_idProducts = JSON.parse(sessionStorage.getItem('idProducts'))
+
+procesar.addEventListener('click', () => {
+  arr_products = JSON.parse(sessionStorage.getItem('productos'))
+  arr_idProducts = JSON.parse(sessionStorage.getItem('idProducts'))
+})
 // Obtener los datos del formulario
 
 const fecha_hora = document.querySelector('.form-factura #fecha_hora').value;
@@ -44,7 +50,7 @@ cerrar_pedido.addEventListener('click', () => {
 // Definir la URL del endpoint para obtener el token
 const URL_SERVER = 'http://79.143.94.153/api';
 const URL_LOCAL = 'http://127.0.0.1:8000/api';
-const URL = URL_SERVER
+const URL = URL_LOCAL
 const tokenEndpoint = `${URL}/login`;
 
 // Definir los datos de autenticación (por ejemplo, nombre de usuario y contraseña)
@@ -213,7 +219,7 @@ fetch(tokenEndpoint, requestOptions)
           cantidad: product.cantidad,
           precio: product.precio,
           descuento: descuento,
-          iva: iva,
+          iva: (product.precio * product.cantidad) * product.iva,
           enviada_beesy: 'Si',
           fecha_hora: fecha_hora,
           id_modificador1: null,

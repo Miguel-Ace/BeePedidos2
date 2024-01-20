@@ -60,12 +60,12 @@
                                     <th>Descuento</th>
                                     <th>IVA</th>
                                     <th>Sub-total</th>
-                                    <th>Propina</th>
-                                    <th>Tipo Pago</th>
-                                    <th>Factura Electronica</th>
-                                    <th>Tipo Pedido</th>
-                                    <th>Tipo Entrega</th>
-                                    <th>Imagen</th>
+                                    {{-- <th>Propina</th> --}}
+                                    {{-- <th>Tipo Pago</th> --}}
+                                    {{-- <th>Factura Electronica</th> --}}
+                                    {{-- <th>Tipo Pedido</th> --}}
+                                    {{-- <th>Tipo Entrega</th> --}}
+                                    {{-- <th>Imagen</th> --}}
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -80,21 +80,21 @@
                                         <td>{{$pedido->descuento}}</td>
                                         <td>{{$pedido->iva}}</td>
                                         <td>{{$pedido->sub_total}}</td>
-                                        <td>{{$pedido->propina}}</td>
-                                        <td>{{$pedido->tipoPago->tipo_pago}}</td>
-                                        <td>{{$pedido->factura_electronica}}</td>
-                                        <td>
+                                        {{-- <td>{{$pedido->propina}}</td> --}}
+                                        {{-- <td>{{$pedido->tipoPago->tipo_pago}}</td> --}}
+                                        {{-- <td>{{$pedido->factura_electronica}}</td> --}}
+                                        {{-- <td>
                                             @if (isset($pedido->tipoPedido->tipo_pedido))
                                                 {{$pedido->tipoPedido->tipo_pedido}}
                                             @endif
-                                        </td>
-                                        <td>
+                                        </td> --}}
+                                        {{-- <td>
                                             @if (isset($pedido->tipoEntrega->tipo_entrega))
                                                 {{$pedido->tipoEntrega->tipo_entrega}}
                                             @endif
-                                        </td>
-                                        <td>{{$pedido->adjuntar_imagen}}</td>
-                                        <td>{{$pedido->estado->estado}}</td>
+                                        </td> --}}
+                                        {{-- <td>{{$pedido->adjuntar_imagen}}</td> --}}
+                                        <td>{{$pedido->cerrar_pedido == 1 ? 'Cerrado' : 'Abierto'}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -307,12 +307,12 @@
                                     <th>Descuento</th>
                                     <th>IVA</th>
                                     <th>Sub-total</th>
-                                    <th>Propina</th>
-                                    <th>Tipo Pago</th>
-                                    <th>Factura Electronica</th>
-                                    <th>Tipo Pedido</th>
-                                    <th>Tipo Entrega</th>
-                                    <th>Imagen</th>
+                                    {{-- <th>Propina</th> --}}
+                                    {{-- <th>Tipo Pago</th> --}}
+                                    {{-- <th>Factura Electronica</th> --}}
+                                    {{-- <th>Tipo Pedido</th> --}}
+                                    {{-- <th>Tipo Entrega</th> --}}
+                                    {{-- <th>Imagen</th> --}}
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -320,29 +320,13 @@
                                 @foreach ($pedidos as $pedido)
                                     @if ($pedido->id_cliente == $usuarioAuth)
                                         <tr>
-                                            {{-- <td>$dato->id</td> --}}
                                             <td>{{$pedido->num_pedido}}</td>
                                             <td>{{$pedido->fecha_hora}}</td>
-                                            {{-- <td>{{$pedido->id_empresa}}</td> --}}
                                             <td>{{$pedido->cliente->name}}</td>
                                             <td>{{$pedido->descuento}}</td>
                                             <td>{{$pedido->iva}}</td>
                                             <td>{{$pedido->sub_total}}</td>
-                                            <td>{{$pedido->propina}}</td>
-                                            <td>{{$pedido->tipoPago->tipo_pago}}</td>
-                                            <td>{{$pedido->factura_electronica}}</td>
-                                            <td>
-                                                @if (isset($pedido->tipoPedido->tipo_pedido))
-                                                    {{$pedido->tipoPedido->tipo_pedido}}
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if (isset($pedido->tipoEntrega->tipo_entrega))
-                                                    {{$pedido->tipoEntrega->tipo_entrega}}
-                                                @endif
-                                            </td>
-                                            <td>{{$pedido->adjuntar_imagen}}</td>
-                                            <td>{{$pedido->estado->estado}}</td>
+                                            <td>{{$pedido->cerrar_pedido == 1 ? 'Cerrado' : 'Abierto'}}</td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -437,6 +421,7 @@
                     <div class="categoria d-none">{{$producto->id_categoria}}</div>
                     <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
                     {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
+                    <div class="iva d-none">{{$producto->iva}}</div>
 
                     <input class="button" type="submit" value="Agregar">
                 </div>
@@ -468,6 +453,7 @@
                     <div class="categoria d-none">{{$producto->id_categoria}}</div>
                     <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
                     {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
+                    <div class="iva d-none">{{$producto->iva}}</div>
 
                     <input class="button" type="submit" value="Agregar">
                 </div>
@@ -586,6 +572,7 @@
         }))
         
         for (const i of productosMap) {
+            console.log(i);
             arr_id_products.push({
                 id: i.id,
             })
@@ -598,7 +585,9 @@
                 descripcion: i.product.descripcion,
                 existencia: i.product.existencia,
                 descuento: i.product.descuento,
-                cantidad: i.cantidad
+                cantidad: i.cantidad,
+                iva: i.product.iva,
+                quantity: i.cantidad
             })
             agregarProductsSesion()
             agregarIdProductsSesion()
@@ -619,7 +608,7 @@
 @section('list-productos-cart')
     <div class="carrito">
         <p class="tittle-cart">Mi Pedido</p>
-        <p class="desc-cart">Aqui podras ver el resumen <br> y totales de tu pedido</p>
+        <p class="desc-cart">Aqui podras ver el resumen <br> y totales de tu pedido. <br> Agregados: <span class="totalProductosAgregados"></span></p>
         
         <div class="dropdown-carrito">
             <div class="productos-agregados"></div>

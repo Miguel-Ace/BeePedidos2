@@ -637,6 +637,11 @@ img{
         }
     
         .mostrar-pedido{
+            position: fixed;
+            right: 0;
+            width: 26rem;
+            height: 100vh;
+            overflow: scroll;
             background-color: white;
             .alerta-agregado{
                 z-index: 1;
@@ -766,7 +771,8 @@ img{
         }
     }
     .tabla-resumen-pedidos{
-        width: 170rem;
+        // width: 100rem;
+        width: 100%;
         thead tr th{
             background: #3a3939;
             color: white;

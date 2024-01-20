@@ -21,7 +21,7 @@ if (sessionStorage.getItem('productos')) {
 
     for (const producto of arr_products) {
         const precio = producto.precio
-        const iva = (producto.precio * 0.10) * producto.cantidad
+        const iva = (producto.precio * producto.iva) * producto.cantidad
         const subtotal = producto.precio * producto.cantidad
         const total = iva + subtotal
         let descuento
