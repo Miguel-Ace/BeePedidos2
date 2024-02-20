@@ -1,39 +1,19 @@
 @extends('layout.app')
-@vite(['resources/js/products.js','resources/js/add_producto.js','resources/js/botones_producto.js'])
+@vite(['resources/js/products.js','resources/sass/pantalla_de_carga.scss'])
 
-{{-- <pre>
-    {{$ultimoValue}}
-</pre> --}}
+<span class="user" style="display: none">
+    {{$usuarioAuth}}
+</span>
+
+<div class="loanding">
+    <div class="bolls">
+        <span class="sp1"></span>
+        <span class="sp2"></span>
+        <span class="sp3"></span>
+    </div>
+</div>
 
 @section('list-categoria')
-    @if (session('success'))
-        <script>
-            swal({
-                title: "¡Éxito!",
-                text: "{{ session('success') }}",
-                icon: "success",
-                button: "Aceptar",
-            });
-        </script>
-    @endif
-
-    @if (session('message'))
-        <script>
-            swal({
-                title: "¡Éxito!",
-                text: "{{ session('message') }}",
-                icon: "success",
-                button: "Aceptar",
-            });
-        </script>
-    @endif
-
-    @if (session('borrarOrden'))
-        <script>
-            let arr_products = []
-            sessionStorage.setItem('productos', JSON.stringify(arr_products))
-        </script>
-    @endif
 
     {{-- Modal Pedidos User --}}
     @if (auth()->check())
@@ -72,28 +52,12 @@
                             <tbody id="listaParticipante">
                                 @foreach ($pedidos as $pedido)
                                     <tr>
-                                        {{-- <td>$dato->id</td> --}}
                                         <td>{{$pedido->num_pedido}}</td>
                                         <td>{{$pedido->fecha_hora}}</td>
-                                        {{-- <td>{{$pedido->id_empresa}}</td> --}}
                                         <td>{{$pedido->cliente->name}}</td>
                                         <td>{{$pedido->descuento}}</td>
                                         <td>{{$pedido->iva}}</td>
                                         <td>{{$pedido->sub_total}}</td>
-                                        {{-- <td>{{$pedido->propina}}</td> --}}
-                                        {{-- <td>{{$pedido->tipoPago->tipo_pago}}</td> --}}
-                                        {{-- <td>{{$pedido->factura_electronica}}</td> --}}
-                                        {{-- <td>
-                                            @if (isset($pedido->tipoPedido->tipo_pedido))
-                                                {{$pedido->tipoPedido->tipo_pedido}}
-                                            @endif
-                                        </td> --}}
-                                        {{-- <td>
-                                            @if (isset($pedido->tipoEntrega->tipo_entrega))
-                                                {{$pedido->tipoEntrega->tipo_entrega}}
-                                            @endif
-                                        </td> --}}
-                                        {{-- <td>{{$pedido->adjuntar_imagen}}</td> --}}
                                         <td>{{$pedido->cerrar_pedido == 1 ? 'Cerrado' : 'Abierto'}}</td>
                                     </tr>
                                 @endforeach
@@ -105,7 +69,7 @@
         </div>
     </div>
     @endif
-    {{-- Modal Pedidos User --}}
+    {{-- Fin Modal Pedidos User --}}
 
     {{-- Modal editar User --}}
     @if (auth()->check())
@@ -132,7 +96,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-                        
+
                                 <div class="campo">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="email" id="email" name="email" value="{{auth()->user()->email}}">
@@ -140,7 +104,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-                        
+
                                 <div class="campo">
                                     <label for="telefono" class="form-label">Telefono</label>
                                     <input type="number" class="telefono" id="telefono" name="telefono" value="{{auth()->user()->telefono}}">
@@ -148,7 +112,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-                        
+
                                 <div class="campo">
                                     <label for="cedula" class="form-label">Cédula</label>
                                     <input type="text" class="cedula" id="cedula" name="cedula" value="{{auth()->user()->cedula}}">
@@ -156,7 +120,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-                        
+
                                 <div class="campo">
                                     <label for="tipo_cedula" class="form-label">Tipo Cédula</label>
                                     <select name="tipo_cedula" id="tipo_cedula">
@@ -187,7 +151,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-            
+
                                 <div class="campo">
                                     <label for="direccion1" class="form-label">Primera Dirección</label>
                                     {{-- <input type="text" class="direccion1" id="direccion1" name="direccion1" value="{{auth()->user()->direccion1}}"> --}}
@@ -196,7 +160,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-            
+
                                 <div class="campo">
                                     <label for="direccion2" class="form-label">Segunda Dirección</label>
                                     {{-- <input type="text" class="direccion2" id="direccion2" name="direccion2" value="{{auth()->user()->direccion2}}"> --}}
@@ -205,7 +169,7 @@
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
                                 </div>
-            
+
                                 <div class="campo">
                                     <label for="direccion3" class="form-label">Tercera Dirección</label>
                                     {{-- <input type="text" class="direccion3" id="direccion3" name="direccion3" value="{{auth()->user()->direccion3}}"> --}}
@@ -223,7 +187,7 @@
                                     @enderror
                                 </div> --}}
                             </div>
-                        
+
                             <button type="submit" class="btn-enviar">Guardar</button>
                         </form>
                     </div>
@@ -232,7 +196,7 @@
         </div>
     </div>
     @endif
-    {{-- Modal fin editar User --}}
+    {{-- Fin Modal fin editar User --}}
 
     <!-- Modal Roles-->
     <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -302,22 +266,15 @@
                                     {{-- <th>#</th> --}}
                                     <th>Num-Pedido</th>
                                     <th>Fecha y Hora <input type="date" id="fecha-filtro"></th>
-                                    {{-- <th>Empresa</th> --}}
                                     <th>Cliente</th>
                                     <th>Descuento</th>
                                     <th>IVA</th>
                                     <th>Sub-total</th>
-                                    {{-- <th>Propina</th> --}}
-                                    {{-- <th>Tipo Pago</th> --}}
-                                    {{-- <th>Factura Electronica</th> --}}
-                                    {{-- <th>Tipo Pedido</th> --}}
-                                    {{-- <th>Tipo Entrega</th> --}}
-                                    {{-- <th>Imagen</th> --}}
                                     <th>Estado</th>
                                 </tr>
                             </thead>
-                            <tbody id="listaParticipante">
-                                @foreach ($pedidos as $pedido)
+                            <tbody id="listaParticipante" class="registro_pedidos">
+                                {{-- @foreach ($pedidos as $pedido)
                                     @if ($pedido->id_cliente == $usuarioAuth)
                                         <tr>
                                             <td>{{$pedido->num_pedido}}</td>
@@ -329,7 +286,7 @@
                                             <td>{{$pedido->cerrar_pedido == 1 ? 'Cerrado' : 'Abierto'}}</td>
                                         </tr>
                                     @endif
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -342,9 +299,9 @@
     <div class="list">
         <div class="contenedor-categoria">
             <ion-icon class="cerrar-categorias" name="close-circle-outline"></ion-icon>
-            @foreach ($categorias as $categoria)
+            {{-- @foreach ($categorias as $categoria)
                 <button class="categorias" value="{{ $categoria->id }}">{{ $categoria->categoria }}</button>
-            @endforeach
+            @endforeach --}}
         </div>
     </div>
 
@@ -363,25 +320,12 @@
                 <div class="carousel-item">
                     <img src="{{$empresa->baner3}}"  class="d-block w-100" alt="Imagen 3">
                 </div>
-            @endif    
+            @endif
         @endforeach
     </div>
 @endsection
 
 @section('list-productos')
-
-    @if (session('success_message'))
-        <script>
-            sessionStorage.removeItem('sumatoria');
-            swal({
-                title: "¡Éxito!",
-                text: "{{ session('success_message') }}",
-                icon: "success",
-                button: "Aceptar",
-            });
-        </script>
-    @endif
-
 
     <h1 class="titulo-categoria"></h1>
     <div class="desc-categoria">
@@ -393,133 +337,8 @@
         </div>
     </div>
 
-    @foreach ($productos as $producto)
-        @if ($producto->descuento != NULL)
-            @if ($producto->activo == true)
-                <div class="productos">
-                    <span class="id-producto d-none">{{$producto->id}}</span>
-                    <div class="content-img">
-                        <img src="{{$producto->url_imagen}}" alt="">
-                    </div>
-                    <div class="descuento"><span>Hasta un -{{$producto->descuento}}%</span> <p>{{$producto->producto}}</p></div>
-                    {{-- Sacando el descuento --}}
 
-                    {{-- <span class="ecuacion-descuento">{{$descuento = $producto->precio * $producto->descuento / 100}}</span> --}}
-
-                    <div class="descripcion">{{$producto->descripcion}}</div>
-                    
-                    <div class="precio"><span class="moneda">{{$moneda}}</span><span>{{number_format($producto->precio - ($producto->precio * $producto->descuento / 100), 2)}}</span> <sub>{{$moneda}}{{number_format($producto->precio, 2)}}</sub></div>
-                    
-                    <div class="existencia">Exist: <span>{{$producto->existencia}}</span></div>
-
-                    <div class="selectCantidades">
-                        <button class="menos">-</button>
-                        <input type="text" class="quantity" placeholder="0" value="0">
-                        <button class="mas">+</button>
-                    </div>
-
-                    <div class="categoria d-none">{{$producto->id_categoria}}</div>
-                    <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
-                    {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
-                    <div class="iva d-none">{{$producto->iva}}</div>
-
-                    <input class="button" type="submit" value="Agregar">
-                </div>
-            @endif
-        @else
-            @if ($producto->activo == true)
-                <div class="productos">
-                    <span class="id-producto d-none">{{$producto->id}}</span>
-                    <div class="content-img">
-                        <img src="{{$producto->url_imagen}}" alt="">
-                    </div>
-                    <div class="descuento sin-descuento"><p>{{$producto->producto}}</p></div>
-                    {{-- Sacando el descuento --}}
-
-                    {{-- <span class="ecuacion-descuento">{{$descuento = $producto->precio * $producto->descuento / 100}}</span> --}}
-
-                    <div class="descripcion">{{$producto->descripcion}}</div>
-
-                    <div class="precio"><span class="moneda">{{$moneda}}</span><span>{{number_format($producto->precio, 2)}}</span></div>
-
-                    <div class="existencia">Exist: <span>{{$producto->existencia}}</span></div>
-
-                    <div class="selectCantidades">
-                        <button class="menos">-</button>
-                        <input type="text" class="quantity" placeholder="0" value="0">
-                        <button class="mas">+</button>
-                    </div>
-                    
-                    <div class="categoria d-none">{{$producto->id_categoria}}</div>
-                    <div class="cadProductoBeesy d-none">{{$producto->cod_producto_beesy}}</div>
-                    {{-- <div class="descripcion">{{$producto->descripcion}}</div> --}}
-                    <div class="iva d-none">{{$producto->iva}}</div>
-
-                    <input class="button" type="submit" value="Agregar">
-                </div>
-            @endif
-        @endif
-    @endforeach
-
-    <script>
-        //Darle color a la categoria seleccionada
-        const contenedorCategoria = document.querySelectorAll('.contenedor-categoria button')
-        const tituloCategoria = document.querySelector('.titulo-categoria')
-        const productos = document.querySelectorAll('.productos')
-    
-        let categorias = JSON.parse('{!! json_encode($categorias) !!}');
-
-        contenedorCategoria.forEach(item => {
-            item.addEventListener('click', () => {
-                contenedorCategoria.forEach(item => {
-                    item.classList.remove('active')
-                });
-                item.classList.toggle('active')
-                const valor = parseInt(item.value)
-                idValor(valor)
-                sessionStorage.setItem('idCategoria', JSON.stringify(valor))
-            })
-        });
-
-
-        if (JSON.parse(sessionStorage.getItem('idCategoria')) != null) {
-            idValor(JSON.parse(sessionStorage.getItem('idCategoria')))
-        }
-
-        function idValor(id) {
-            categorias.forEach(categoria => {
-                if (categoria.id == id) {
-                    tituloCategoria.textContent = categoria.categoria
-                    // console.log(categoria.id)
-                }
-            });
-
-            productos.forEach(product => {
-                const idCategoriaProducto = product.querySelector('.categoria').textContent
-                if (idCategoriaProducto == id) {
-                    product.style.display = ''
-                    // product.style.height = '40rem'
-                }else{
-                    product.style.display = 'none'
-                }
-            });    
-        }
-    </script>
-
-    <script>
-        const btnCategorias = document.querySelector('.btn-categorias')
-        const btnPedidos = document.querySelector('.btn-pedidos')
-        const btnCerrarCategorias = document.querySelector('.cerrar-categorias')
-        const listCategoria = document.querySelector('.list')
-
-        btnCategorias.onclick = () => {
-            listCategoria.style = "display: flex;"
-        }
-        
-        btnCerrarCategorias.onclick = () => {
-            listCategoria.style = "display: none;"
-        }
-    </script>
+    <div class="content-all-products"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
@@ -533,86 +352,17 @@
         });
     </script>
 
-    <script>
-        const pedidos = JSON.parse('{!! json_encode($pedidos) !!}')
-        const usuario = '{!! json_encode($usuarioAuth) !!}'
-        const monedas = '{!! json_encode($moneda) !!}'
-        const detallePedidos = JSON.parse('{!! json_encode($detalle_pedidos) !!}')
-        const productosBd = JSON.parse('{!! json_encode($productos) !!}')
-
-        let arr_products = []
-        let arr_id_products = []
-        let estado
-
-        if (!sessionStorage.getItem('productos') || JSON.parse(sessionStorage.getItem('productos')).length == 0) {
-            estado = true
-        }else{
-            estado = false
-        }
-
-        // console.time('filter pedidos')
-        // console.timeEnd('filter pedidos')
-        const pedidosCerrados = pedidos.filter(x => x.cerrar_pedido == 0).filter(x => x.id_cliente == usuario)
-
-        sessionStorage.setItem('numOrder', JSON.stringify(pedidosCerrados[0].num_pedido))
-        sessionStorage.setItem('pedido', JSON.stringify(pedidosCerrados[0].id))
-
-        // console.time('filter detalle')
-        // console.timeEnd('filter detalle')
-        const detalleFiltrado = detallePedidos.filter(x => x.num_pedido == pedidosCerrados[0].num_pedido)
-
-        const pedidosIndexados = productosBd.reduce((acc,el) => {
-            acc[el.id] = el
-            return acc
-        }, {})
-
-        const productosMap = detalleFiltrado.map(item => ({
-            ...item,
-            product: pedidosIndexados[item.id_producto]
-        }))
-        
-        for (const i of productosMap) {
-            console.log(i);
-            arr_id_products.push({
-                id: i.id,
-            })
-            arr_products.push({
-                id: i.product.id,
-                imagen: i.product.url_imagen,
-                nombre: i.product.producto,
-                precio: i.product.precio,
-                moneda: monedas.replace(/"/g, ''),
-                descripcion: i.product.descripcion,
-                existencia: i.product.existencia,
-                descuento: i.product.descuento,
-                cantidad: i.cantidad,
-                iva: i.product.iva,
-                quantity: i.cantidad
-            })
-            agregarProductsSesion()
-            agregarIdProductsSesion()
-        }
-
-        function agregarProductsSesion() {
-            if (estado) {
-                sessionStorage.setItem('productos', JSON.stringify(arr_products))
-            }
-        }
-
-        function agregarIdProductsSesion() {
-            sessionStorage.setItem('idProducts', JSON.stringify(arr_id_products))
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 @section('list-productos-cart')
     <div class="carrito">
         <p class="tittle-cart">Mi Pedido</p>
         <p class="desc-cart">Aqui podras ver el resumen <br> y totales de tu pedido. <br> Agregados: <span class="totalProductosAgregados"></span></p>
-        
+
         <div class="dropdown-carrito">
             <div class="productos-agregados"></div>
-            
+
             <div class="total-carrito">
                 <p>Total: <span class="text-precio">0</span></p>
             </div>

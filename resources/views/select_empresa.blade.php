@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pedidos</title>
-    @vite(['resources/css/app.css','resources/sass/select_empresa.scss','resources/js/app.js'])
+    @vite(['resources/css/app.css','resources/sass/select_empresa.scss'])
 </head>
 <body>
     <div class="header">
@@ -63,19 +63,20 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <script>
-        const irBtn = document.querySelector('.ir')
-        sessionStorage.removeItem('sumatoria');
-        sessionStorage.removeItem('idCategoria')
-        
-        sessionStorage.removeItem('productos')
-        sessionStorage.removeItem('numOrder')
+        // const irBtn = document.querySelector('.ir')
+        sessionStorage.removeItem('id_ca');
         sessionStorage.removeItem('idProducts')
         sessionStorage.removeItem('pedido')
+        
+        // sessionStorage.removeItem('idCategoria')
+        
+        // sessionStorage.removeItem('productos')
+        // sessionStorage.removeItem('numOrder')
 
-        if (JSON.parse(sessionStorage.getItem('estatus'))) {
-            sessionStorage.setItem('estatus', JSON.stringify(false));
-            irBtn.click();
-        }
+        // if (JSON.parse(sessionStorage.getItem('estatus'))) {
+        //     sessionStorage.setItem('estatus', JSON.stringify(false));
+        //     irBtn.click();
+        // }
     </script>
 </body>
 </html>

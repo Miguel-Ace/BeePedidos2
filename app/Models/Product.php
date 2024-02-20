@@ -20,6 +20,7 @@ class Product extends Model
         'tipo_producto_beesy',
         'activo',
         'existencia',
+        'exis_temp',
         'iva'
     ];
 }

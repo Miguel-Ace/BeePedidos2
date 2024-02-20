@@ -67,7 +67,7 @@
             <p><strong>Correo Electrónico:</strong> {{$msg['email']}}</p>
             <p><strong>Contraseña:</strong> {{$msg['password']}}</p>
             <p>Puedes acceder a tu correo electrónico haciendo clic en el siguiente enlace:</p>
-            <a class="button" href="http://127.0.0.1:8000/login">Acceder a tu correo</a>
+            <a class="button" href="http://79.143.94.153/login">Acceder a tu correo</a>
         </div>
         <div class="footer">
             <p>Este es un mensaje automático. Por favor, no respondas a este correo.</p>

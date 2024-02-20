@@ -93,15 +93,21 @@ class PrincipalController extends Controller
         return view('cart', compact('productos','moneda','usuarioAuth','pedidos','empresas','modificadores','tipo_pagos','tipo_pedidos','tipo_entregas','cantidad_pedidos','fechaHoraActual','idEmpresa','detalle_pedidos'));
     }
 
-    // public function checkout(Request $request, $idEmpresa){
-    //     $datos = $request->except('_token');
-    //     Order::insert($datos);
+    // Enviando el email cuando el user cierra pedido
+    public function send_mail_cart() {
 
-    //     if ($request->cerrar_pedido == 1) {
-    //         return redirect('/'.$idEmpresa)->with('borrarOrden','INFORMACIÓN ACTUALIZADA');
-    //     }else{
-    //         return redirect('/'.$idEmpresa)->with('message','INFORMACIÓN ACTUALIZADA');
-    //     }
-        
-    // }
+        $pedido = Order::where('id_cliente', auth()->user()->id)
+                        ->where('cerrar_pedido', 0)
+                        ->get();
+
+
+        // $id_pedido = $pedido->id;
+        // $detalle_pedidos = Detail::where('num_pedido', $id_pedido);
+
+        $correo = new notificacionesFactura('');
+        $email = auth()->user()->email;
+        Mail::to($email)->send($correo);
+
+        return redirect('/9');
+    }
 }

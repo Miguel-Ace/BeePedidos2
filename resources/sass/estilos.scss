@@ -478,15 +478,21 @@ img{
             }
             .contenedor-cards{
                 position: relative;
-                overflow: scroll;
-                background-color: #E5E7E9;
-                padding: 11rem 1rem 1rem 1rem;
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                @media (min-width: 1200px) {
-                    grid-template-columns: repeat(3, 1fr);
+                .content-all-products{
+                    width: 98%;
+                    // overflow: scroll;
+                    background-color: #E5E7E9;
+                    padding: 11rem 1rem 1rem 1rem;
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    // @media (min-width: 800px) {
+                    //     grid-template-columns: repeat(2, 1fr);
+                    // }
+                    @media (min-width: 1200px) {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                    gap: 1rem;
                 }
-                gap: 1rem;
                 .titulo-categoria{
                     position: absolute;
                     top: 1rem;
@@ -539,6 +545,9 @@ img{
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
+                    &.ocultar{
+                        display: none;
+                    }
                     &:hover{
                         // background-color: rgb(248, 248, 248);
                         border: 1px solid #1A5276;
@@ -622,6 +631,9 @@ img{
                             border: 1px solid #1A5276;
                             background: white;
                             color: #1A5276;
+                        }
+                        &.bloquado{
+                            opacity: .5;
                         }
                         &.activo{
                             background-color: rgba(26, 82, 118, .5);

@@ -21,89 +21,6 @@ body{
     font-family: 'Kantumruy Pro', sans-serif;
 }
 
-.loanding{
-    visibility: hidden;
-    position: absolute;
-    z-index: 3;
-    width: 100%;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &.activo{
-        visibility: visible;
-    }
-    .bolls{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        // background: #333;
-        width: 18rem;
-        height: 18rem;
-        gap: 1rem;
-        span{
-            background: white;
-            width: 5rem;
-            height: 5rem;
-            border-radius: 50%;
-            transition: .3s ease;
-            // box-shadow: inset 0 0 .1rem .1rem;
-            opacity: 0;
-            &.sp1{
-                opacity: 1;
-                animation: probando1 2s infinite alternate;
-                
-                @keyframes probando1 {
-                    0%{
-                        scale: .5;
-                    }
-                    50%{
-                        scale: 1;
-                    }
-                    100%{
-                        scale: .5;
-                    }
-                }
-            }
-
-            &.sp2{
-                opacity: 1;
-                animation: probando2 2s infinite alternate;
-
-                @keyframes probando2 {
-                    0%{
-                        scale: .5;
-                    }
-                    50%{
-                        scale: 1;
-                    }
-                    100%{
-                        scale: .5;
-                    }
-                }
-            }
-
-            &.sp3{
-                opacity: 1;
-                animation: probando3 2s infinite alternate;
-
-                @keyframes probando3 {
-                    0%{
-                        scale: .5;
-                    }
-                    50%{
-                        scale: 1;
-                    }
-                    100%{
-                        scale: .5;
-                    }
-                }
-            }
-        }
-    }
-}
-
 .su-orden{
     font-family: 'Pacifico', cursive;
     font-size: 4rem;
@@ -155,7 +72,7 @@ p{
             tr{
                 gap: .2rem;
                 display: grid;
-                grid-template-columns: repeat(11, 1fr);
+                grid-template-columns: repeat(10, 1fr);
                 // color: white;
                 font-family: none;
                 border-top: 1px solid rgb(185, 166, 166);
@@ -167,7 +84,8 @@ p{
         tbody{
             background-color: white;
             overflow-y: scroll;
-            height: 45rem;
+            // height: 45rem;
+            // height: 100%;
             @media (min-width: 0px) and (max-width: 575px) {
                 height: 30rem;
             }
@@ -178,7 +96,7 @@ p{
             tr{
                 box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
                 display: grid;
-                grid-template-columns: repeat(11, 1fr);
+                grid-template-columns: repeat(10, 1fr);
                 align-items: center;
                 text-align: center;
                 padding: 1rem 0;
@@ -326,60 +244,60 @@ p{
     z-index: 1;
     background-image: url('https://img.freepik.com/vector-gratis/nebulosa-abstracta_91008-231.jpg?w=900&t=st=1686546239~exp=1686546839~hmac=f9d396ceae6130016487239a0f3d9180d535e4882e99e8b989738afd6839769f');
     font-size: 1.8rem;
-    form{
-        .info{
-            .content-info{
-                display: flex;
-                justify-content: space-between;
+    .info{
+        .content-info{
+            display: flex;
+            justify-content: space-between;
 
+        }
+    }
+    .content-campo{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        .campo{
+            display: flex;
+            justify-content: space-between;
+            .adjuntar_imagen{
+                width: 18.3rem;
+            }
+            input{
+                width: 18rem;
             }
         }
-        .content-campo{
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            .campo{
-                display: flex;
-                justify-content: space-between;
-                .adjuntar_imagen{
-                    width: 18.3rem;
-                }
-                input{
-                    width: 18rem;
-                }
-            }
-            .select{
-                display: flex;
-                justify-content: space-between;
-            }
+        .select{
+            display: flex;
+            justify-content: space-between;
         }
-        label{
-            text-align: center;
-        }
+    }
+    label{
+        text-align: center;
+    }
 
-        .modal-footer{
-            button{
-                display: flex;
-                align-items: center;
-                border: none;
-                padding: .5rem 1rem;
-                color: white;
-                border-radius: .4rem;
-                ion-icon{
-                    margin-right: .5rem;
-                    font-size: 2.5rem;
-                }
-                &.close-btn{
-                    background-color: #4d4c4c;
-                }
-                &.finalizar-btn{
-                    background-color: #138D75;
-                    &.ocultar{
-                        cursor: no-drop;
-                        opacity: .5;
-                    }
+    .modal-footer{
+        button{
+            display: flex;
+            align-items: center;
+            border: none;
+            padding: .5rem 1rem;
+            color: white;
+            border-radius: .4rem;
+            ion-icon{
+                margin-right: .5rem;
+                font-size: 2.5rem;
+            }
+            &.close-btn{
+                background-color: #4d4c4c;
+            }
+            &.finalizar-btn{
+                background-color: #138D75;
+                &.ocultar{
+                    cursor: no-drop;
+                    opacity: .5;
                 }
             }
         }
     }
+    // form{
+    // }
 }

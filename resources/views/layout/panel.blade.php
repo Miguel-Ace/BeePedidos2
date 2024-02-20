@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Panel Administrativo</title>
-    @vite(['resources/css/app.css','resources/sass/panel.scss','resources/js/app.js'])
+    @vite(['resources/css/app.css','resources/sass/panel.scss'])
     <script src="https://kit.fontawesome.com/cd197f289d.js" crossorigin="anonymous"></script>
 </head>
 <body>

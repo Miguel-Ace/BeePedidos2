@@ -490,6 +490,13 @@ class ApiController extends Controller
         return response()->json($pedidos->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
     }
 
+    public function getPedidoCerrado() {
+        $pedidos = Order::where('cerrar_pedido', 1)->get();
+
+        // return response()->json($pedidos, 200);
+        return response()->json($pedidos->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
+    }
+
 
     public function getPedido(){
 

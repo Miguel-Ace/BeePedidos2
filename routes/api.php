@@ -84,6 +84,7 @@ Route::delete('/modificador_producto/delete/{id}', [ApiController::class, 'delet
 
 // ================ Pedido =====================
 Route::get('/pedido_x_empresa/{empresa}', [ApiController::class, 'getPedidoPorEmpresa'])->middleware('auth:sanctum');
+Route::get('/pedido_cerrados', [ApiController::class, 'getPedidoCerrado'])->middleware('auth:sanctum');
 
 Route::get('/pedido', [ApiController::class, 'getPedido'])->middleware('auth:sanctum');
 Route::get('/pedido/{id}', [ApiController::class, 'getPedidoid'])->middleware('auth:sanctum');
