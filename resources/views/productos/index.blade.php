@@ -15,62 +15,6 @@
 
 @section('list-categoria')
 
-    {{-- Modal Pedidos User --}}
-    @if (auth()->check())
-    <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modificar-modal modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLongTitle">Regístro de Pedidos</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body cuerpo-modal">
-                    <div class="table-responsive">
-                        <table id="tabla-pedidos" class="tabla-resumen-pedidos">
-                            <thead>
-                                <tr>
-                                    {{-- <th>#</th> --}}
-                                    <th>Num-Pedido</th>
-                                    <th>Fecha y Hora <input type="date" id="fecha-filtro"></th>
-                                    {{-- <th>Empresa</th> --}}
-                                    <th>Cliente</th>
-                                    <th>Descuento</th>
-                                    <th>IVA</th>
-                                    <th>Sub-total</th>
-                                    {{-- <th>Propina</th> --}}
-                                    {{-- <th>Tipo Pago</th> --}}
-                                    {{-- <th>Factura Electronica</th> --}}
-                                    {{-- <th>Tipo Pedido</th> --}}
-                                    {{-- <th>Tipo Entrega</th> --}}
-                                    {{-- <th>Imagen</th> --}}
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody id="listaParticipante">
-                                @foreach ($pedidos as $pedido)
-                                    <tr>
-                                        <td>{{$pedido->num_pedido}}</td>
-                                        <td>{{$pedido->fecha_hora}}</td>
-                                        <td>{{$pedido->cliente->name}}</td>
-                                        <td>{{$pedido->descuento}}</td>
-                                        <td>{{$pedido->iva}}</td>
-                                        <td>{{$pedido->sub_total}}</td>
-                                        <td>{{$pedido->cerrar_pedido == 1 ? 'Cerrado' : 'Abierto'}}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-    {{-- Fin Modal Pedidos User --}}
-
     {{-- Modal editar User --}}
     @if (auth()->check())
     <div class="modal fade caja-modal" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -179,13 +123,13 @@
                                     @enderror
                                 </div>
 
-                                {{-- <div class="campo">
+                                <div class="campo">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" class="password" id="password" name="password">
                                     @error('password')
                                         <p class="text-error">{{$message}}</p>
                                     @enderror
-                                </div> --}}
+                                </div>
                             </div>
 
                             <button type="submit" class="btn-enviar">Guardar</button>
@@ -271,23 +215,18 @@
                                     <th>IVA</th>
                                     <th>Sub-total</th>
                                     <th>Estado</th>
+                                    <th>-</th>
                                 </tr>
                             </thead>
+                            @role('Vendedor')
                             <tbody id="listaParticipante" class="registro_pedidos">
-                                {{-- @foreach ($pedidos as $pedido)
-                                    @if ($pedido->id_cliente == $usuarioAuth)
-                                        <tr>
-                                            <td>{{$pedido->num_pedido}}</td>
-                                            <td>{{$pedido->fecha_hora}}</td>
-                                            <td>{{$pedido->cliente->name}}</td>
-                                            <td>{{$pedido->descuento}}</td>
-                                            <td>{{$pedido->iva}}</td>
-                                            <td>{{$pedido->sub_total}}</td>
-                                            <td>{{$pedido->cerrar_pedido == 1 ? 'Cerrado' : 'Abierto'}}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach --}}
                             </tbody>
+                            @endrole
+
+                            {{-- @role('Vendedor')
+                            <tbody class="registro_pedidos_admin">
+                            </tbody>
+                            @endrole --}}
                         </table>
                     </div>
                 </div>

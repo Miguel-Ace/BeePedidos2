@@ -219,6 +219,7 @@ class ApiController extends Controller
         }
 
         return response()->json([
+            $detalle_pedido,
             "message" => "Registro insertados con éxito.",
             "status" => "OK"
         ], 200);
@@ -251,13 +252,15 @@ class ApiController extends Controller
         }
     
         return response()->json(["message" => "Registros eliminados"], 200);
+    }
 
-        // $detalle_pedido = Detail::find($id);
-        // if (is_null($detalle_pedido)) {
-        //     return response()->json(["message"=>"No se pudo eliminar"],404);
-        // }
-        // $detalle_pedido->delete();
-        // return response()->json(["message"=>"Registro eliminado"],200);
+    public function deleteDetallePedidoId($id) {
+        $detalle_pedido = Detail::find($id);
+        if (is_null($detalle_pedido)) {
+            return response()->json(["message"=>"No se pudo eliminar"],404);
+        }
+        $detalle_pedido->delete();
+        return response()->json(["message"=>"Registro eliminado"],200);
     }
 
      // =========== Direcciones Cliente ===========

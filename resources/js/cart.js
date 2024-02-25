@@ -1,6 +1,6 @@
 async function carrito_de_la_compra() {
     // Variables globales
-    let estadoCerrar = 0
+    let estadoCerrar = 1
 
     const id_user = parseInt(document.querySelector('.user').textContent)
 
@@ -155,15 +155,15 @@ async function carrito_de_la_compra() {
             }
             
             // Icono delete
-            const td_ico_delete = document.createElement('td')
-            td_ico_delete.setAttribute('class','delete-product')
-            const btn_ico_delete = document.createElement('button')
-            btn_ico_delete.setAttribute('class','cart_remove')
-            const ico_delete = document.createElement('i')
-            ico_delete.setAttribute('class','fa-solid fa-trash')
+            // const td_ico_delete = document.createElement('td')
+            // td_ico_delete.setAttribute('class','delete-product')
+            // const btn_ico_delete = document.createElement('button')
+            // btn_ico_delete.setAttribute('class','cart_remove')
+            // const ico_delete = document.createElement('i')
+            // ico_delete.setAttribute('class','fa-solid fa-trash')
             // Agregar
-            btn_ico_delete.appendChild(ico_delete)
-            td_ico_delete.appendChild(btn_ico_delete)
+            // btn_ico_delete.appendChild(ico_delete)
+            // td_ico_delete.appendChild(btn_ico_delete)
 
             // Agregar todos los elementos
             tr.appendChild(td_img)
@@ -175,7 +175,7 @@ async function carrito_de_la_compra() {
             tr.appendChild(td_subtotal)
             tr.appendChild(td_iva)
             tr.appendChild(td_total)
-            tr.appendChild(td_ico_delete)
+            // tr.appendChild(td_ico_delete)
             tbody.appendChild(tr)
         }
 
@@ -195,15 +195,16 @@ async function carrito_de_la_compra() {
                 }else{
                     total_iva += (precio_normal * parseFloat(item.iva)) * item.cantidad
                     total_subtotal += parseFloat(item.precio)
-                    total_total =  parseFloat(item.precio) + ((precio_normal * parseFloat(item.iva)) * item.cantidad)
+                    total_total +=  parseFloat(item.precio) + ((precio_normal * parseFloat(item.iva)) * item.cantidad)
                 }
-            }
 
+            }
+            
             resumen_iva.textContent = `¢ ${total_iva.toLocaleString('en-US',{ minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             resumen_sub_total.textContent = `¢ ${total_subtotal.toLocaleString('en-US',{ minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             resumen_total.textContent = `¢ ${total_total.toLocaleString('en-US',{ minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             resumen_descuento.textContent = `¢ ${total_descuento.toLocaleString('en-US',{ minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-
+            
             // Aqui muestro el total
             total.textContent = `Total: ${(total_total).toLocaleString('en-US',{ minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         }
@@ -247,17 +248,16 @@ async function carrito_de_la_compra() {
             fetch(url_insert_pedido, option_insert_pedido)
             .then(response => response.json())
             .then(data => {
-                estadoCerrar == 1 ? this.update_producto() : '' 
+                this.crear_detalle_pedido(data.id)
             })
-            this.crear_detalle_pedido(data.id)
         }
 
         // Editar el pedido
         this.editar_pedido = (id) => {
             const datos = {
-                sub_total: total_subtotal,
-                descuento: total_descuento,
-                iva: total_iva,
+                // sub_total: total_subtotal,
+                // descuento: total_descuento,
+                // iva: total_iva,
                 cerrar_pedido: estadoCerrar,
                 // Agrega más campos según sea necesario
             };
@@ -275,12 +275,12 @@ async function carrito_de_la_compra() {
 
             fetch(url_update_pedido, option_update_pedido)
             .then(res => {
-                estadoCerrar == 1 ? this.update_producto() : ''
+                this.update_producto()
+                // this.eliminar_detalle_pedido()
             })
             .catch(error => {
                 console.log(error);
             })
-            this.eliminar_detalle_pedido()
         }
 
         // Elminar todo el detalle pedido relacionado al user
@@ -337,18 +337,17 @@ async function carrito_de_la_compra() {
             fetch(url_crear_detalle_pedido, option_crear_detalle_pedido)
             .then(res => {
                 // console.log(estadoCerrar);
-                estadoCerrar == 1 ? localStorage.removeItem('productos') : 
+                // estadoCerrar == 1 ? localStorage.removeItem('productos') : 
+                // estadoCerrar == 1 ? this.update_producto() : ''
                 sessionStorage.removeItem('id_ca');
                 sessionStorage.removeItem('idProducts')
                 sessionStorage.removeItem('pedido')
                 // Quitar pantalla de carga
-                document.querySelector('.loanding').classList.add('desactivar')
-                btn_volver.click()
+                // document.querySelector('.loanding').classList.add('desactivar')
                 // btn_send_factura.click()
             })
-            .catch(error => {
-                console.log(error);
-            })
+            
+            this.update_producto()
         }
 
         // Restar a existencias y exis_temp de los productos
@@ -368,7 +367,7 @@ async function carrito_de_la_compra() {
                 .then(datos => {
                     return {
                         id: datos.id,
-                        existencia: (p.existencia - p.cantidad),
+                        existencia: (datos.existencia - p.cantidad),
                         exis_temp: (datos.exis_temp - p.cantidad)
                     };
                 });
@@ -386,41 +385,23 @@ async function carrito_de_la_compra() {
                         body: JSON.stringify(data)
                     };
             
-                    return fetch(url_put_productos, option_put_productos);
+                    fetch(url_put_productos, option_put_productos);
+                    console.log(data);
+                    console.log('Productos actualizados con éxito');
+                    localStorage.removeItem('productos')
+                    btn_volver.click()
                 })
-                .then(res => {
-                    // Manejar la respuesta de la solicitud PUT
-                    if (res.ok) {
-                        console.log('Productos actualizados con éxito');
-                    } else {
-                        console.error('Error al actualizar productos');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
         }
     }
 
     // Llamar obj Cart
     const c = new Cart()
     c.iterar_productos_sesion()
-    // El estado del pedido por defecto es abierto pero si
-    // marcan la casilla se cierra o viceversa
-    cerrar_pedido.addEventListener('click', () => {
-        if (!estadoCerrar) {
-            // console.log('cerrado');
-            estadoCerrar = 1
-        }else{
-            // console.log('abierto');
-            estadoCerrar = 0
-        }
-        // console.log(estadoCerrar);
-    })
     
     finalizarCompra.addEventListener('click', () => {
         finalizarCompra.disabled = true
 
+        // c.update_producto()
         if (sessionStorage.getItem('pedido') && sessionStorage.getItem('pedido').length != '') {
             const id_pedido = JSON.parse(sessionStorage.getItem('pedido'))
             c.editar_pedido(id_pedido)
@@ -429,10 +410,11 @@ async function carrito_de_la_compra() {
             // Agregando pantalla de carga
             document.querySelector('.loanding').classList.remove('desactivar')
             // console.log('hay id');
-        }else{
-            c.crear_pedido()
-            // console.log('No hay id');
         }
+        // else{
+        //     c.crear_pedido()
+        //     // console.log('No hay id');
+        // }
     })
   
 }

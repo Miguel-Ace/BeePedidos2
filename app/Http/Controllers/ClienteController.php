@@ -90,12 +90,37 @@ class ClienteController extends Controller
             'cedula' => 'required',
             'tipo_cedula' => 'required',
             'direccion1' => 'required',
-            'direccion2' => 'required',
-            'direccion3' => 'required',
-            // 'password' => 'nullable|min:8',
+            'direccion2' => 'nullable',
+            'direccion3' => 'nullable',
+            'password' => 'nullable|min:8',
         ]);
 
-        $datos = $request->except('_token','_method');
+        if (empty($request->password)) {
+            $datos = ([
+                'name' => $request->name,
+                'email' => $request->email,
+                'telefono' => $request->telefono,
+                'cedula' => $request->cedula,
+                'tipo_cedula' => $request->tipo_cedula,
+                'direccion1' => $request->direccion1,
+                'direccion2' => $request->direccion2,
+                'direccion3' => $request->direccion3,
+            ]);
+        }else{
+            $datos = ([
+                'name' => $request->name,
+                'email' => $request->email,
+                'telefono' => $request->telefono,
+                'cedula' => $request->cedula,
+                'tipo_cedula' => $request->tipo_cedula,
+                'direccion1' => $request->direccion1,
+                'direccion2' => $request->direccion2,
+                'direccion3' => $request->direccion3,
+                'password' => Hash::make($request->password)
+            ]);
+        };
+
+        // $datos = $request->except('_token','_method');
         User::where('id','=',$id)->update($datos);
         // return redirect('/panel_clientes'.'/'.$idEmpresa)->with('success','INFORMACIÓN ACTUALIZADA');
         return redirect()->back()->with('success','INFORMACIÓN ACTUALIZADA');

@@ -54,28 +54,10 @@
                     <a href="{{url('/panel_productos'.'/'.$idEmpresa)}}">Panel Admin</a>
                     @endrole --}}
                     @if (auth()->check())
-                        {{-- <a href="">Editar</a> --}}
-                        {{-- <button class="btn-editar-user">Editar Perfil</button> --}}
-                        
-                        {{-- @role('Empresario')
-                        <button type="button" class="btn-editar-user" data-toggle="modal" data-target="#exampleModalCenter">
-                            Pedidos2
-                        </button>
-                        @endrole
-                        
-                        @role('Administrador')
-                        <button type="button" class="btn-editar-user" data-toggle="modal" data-target="#exampleModalCenter">
-                            Pedidos
-                        </button>
-                        @endrole --}}
 
                         <button type="button" class="btn-editar-user" data-toggle="modal" data-target="#exampleModalCenter">
                             Pedidos
                         </button>
-
-                        {{-- <button type="button" class="btn-editar-user" data-toggle="modal" data-target="#exampleModalCenter3">
-                            Pedidos3
-                        </button> --}}
 
                         @role('Vendedor')
                         <button type="button" class="btn-editar-user" data-toggle="modal" data-target="#exampleModalCenter1">

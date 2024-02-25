@@ -47,7 +47,7 @@
                     <th>Subtotal</th>
                     <th>IVA</th>
                     <th>Total</th>
-                    <th></th>
+                    {{-- <th></th> --}}
                 </tr>
             </thead>
 
@@ -111,10 +111,10 @@
 
                             <hr>
 
-                            <label>
+                            {{-- <label>
                                 <input type="checkbox" id="cerrar_pedido" value="1">
                                 Cerrar pedido
-                            </label>
+                            </label> --}}
                             
                             <div class="modal-footer">
                                 <button type="button" class="close-btn" data-dismiss="modal"><ion-icon name="close-outline"></ion-icon> Cerrar</button>

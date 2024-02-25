@@ -3,7 +3,10 @@ async function producto() {
     let arr_productos = []
 
     // Variables globales
+    const id_user = parseInt(document.querySelector('.user').textContent)
+
     const modal_registro_pedidos = document.querySelector('.registro_pedidos')
+    const modal_registro_pedidos_admin = document.querySelector('.registro_pedidos_admin')
 
     const hola_user = document.querySelector('.nombre-completo')
     const opciones_del_user = document.querySelector('.settins')
@@ -365,6 +368,8 @@ async function producto() {
 
                         // Reflejar el total
                         this.mostrar_total_en_pantalla()
+                        // 
+                        this.agregar_orden()
                     }else{
                         // Alerta
                         Swal.fire({
@@ -377,6 +382,182 @@ async function producto() {
                     }
                 })
             })
+        }
+        
+        this.agregar_orden = () => {
+            let total_iva = 0
+            let total_descuento = 0
+            let total_subtotal = 0
+            let total_total = 0
+            let ids = []
+
+            // iterando los products que están en sesión
+            for (const item of JSON.parse(localStorage.getItem('productos'))) {
+                const precio_normal = (item.precio / item.cantidad)
+
+                if (item.descuento != null) {
+                    const precio_con_descuento = precio_normal - ((precio_normal * item.descuento) / 100)
+                    const iva = parseFloat((precio_con_descuento * parseFloat(item.iva)) * item.cantidad)
+
+                    total_iva += iva
+                    total_subtotal += precio_con_descuento * item.cantidad
+                    total_total += (precio_con_descuento * item.cantidad) + parseFloat(iva)
+                    total_descuento += ((precio_normal * item.descuento) / 100) * item.cantidad
+                }else{
+                    total_iva += (precio_normal * parseFloat(item.iva)) * item.cantidad
+                    total_subtotal += parseFloat(item.precio)
+                    total_total =  parseFloat(item.precio) + ((precio_normal * parseFloat(item.iva)) * item.cantidad)
+                }
+            }
+
+            // Crear el nuevo detalle pedido
+            const crear_detalle_pedido = (id_p) => {
+                const datos = JSON.parse(localStorage.getItem('productos')).map(x => ({
+                    num_pedido: id_p,
+                    id_producto: x.id,
+                    cantidad: x.cantidad,
+                    precio: (parseFloat(x.precio) / parseInt(x.cantidad)),
+                    descuento: x.descuento,
+                    iva: x.iva,
+                    enviada_beesy: 'Si',
+                    fecha_hora: new Date(),
+                    id_modificador1: null,
+                    id_modificador2: null,
+                    id_modificador3: null,
+                }))
+    
+                const url_crear_detalle_pedido = `${URL}/detalle_pedido/insert`;
+    
+                const option_crear_detalle_pedido = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(datos)
+                }
+    
+                fetch(url_crear_detalle_pedido, option_crear_detalle_pedido)
+                // location.reload()
+                // this.ver_si_hay_pedido_en_bd()
+                // Quitar pantalla de carga
+                sessionStorage.setItem('pedido', id_p)
+                document.querySelector('.loanding').classList.add('desactivar')
+            }
+
+            // Crear el pedido
+            const crear_pedido = () => {
+                const datos = {
+                    num_pedido: null,
+                    fecha_hora: new Date(),
+                    id_cliente: id_user,
+                    sub_total: total_subtotal,
+                    descuento: total_descuento,
+                    iva: total_iva,
+                    propina: null,
+                    factura_electronica: null,
+                    id_tipo_pago: null,
+                    id_tipo_pedido: null,
+                    id_tipo_entrega: null,
+                    adjuntar_imagen: null,
+                    id_estado: 1,
+                    direcciones: null,
+                    latitud: null,
+                    longitud: null,
+                    tipo: null,
+                    tipo_documento: null,
+                    cerrar_pedido: 0,
+                    // Agrega más campos según sea necesario
+                };
+    
+                const url_insert_pedido = `${URL}/pedido/insert`;
+    
+                const option_insert_pedido = {
+                    method: 'POST',
+                    headers: {
+                      'content-type': 'application/json',
+                      'authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(datos)
+                }
+    
+                fetch(url_insert_pedido, option_insert_pedido)
+                .then(response => response.json())
+                .then(data => {
+                    crear_detalle_pedido(data.id)
+                })
+            }
+
+            // Eliminar tod el detalle pedido relacionado al user
+            const eliminar_detalle_pedido = (id_p) => {
+                // const ids = JSON.parse(sessionStorage.getItem('idProducts'));
+                
+                fetch(url_get_detalle_pedidos, option_get_detalle_pedidos)
+                .then(res => res.json())
+                .then(res => {
+                    for (const item of res) {
+                        if (item.num_pedido == id_p) {
+                            ids.push(item.id)
+                        }   
+                    }
+
+                    const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete`;
+            
+                    const option_delete_detalle_pedido = {
+                        method: 'DELETE',
+                        headers: {
+                            'content-type': 'application/json',
+                            'authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(ids)
+                    }
+        
+                    fetch(url_delete_detalle_pedido, option_delete_detalle_pedido)
+                    .then(res => {
+                        // crear_detalle_pedido(JSON.parse(sessionStorage.getItem('id')))
+                        sessionStorage.setItem('idProducts', JSON.stringify(ids));
+                        crear_detalle_pedido(id_p)
+                    })
+                })
+            }
+
+            // Editar el pedido
+            const editar_pedido = (id) => {
+                const datos = {
+                    sub_total: total_subtotal,
+                    descuento: total_descuento,
+                    iva: total_iva,
+                    cerrar_pedido: 0,
+                    // Agrega más campos según sea necesario
+                };
+    
+                const url_update_pedido = `${URL}/pedido/update/${id}`;
+    
+                const option_update_pedido = {
+                    method: 'PUT',
+                    headers: {
+                      'content-type': 'application/json',
+                      'authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(datos)
+                }
+    
+                fetch(url_update_pedido, option_update_pedido)
+                .then(res => {
+                    eliminar_detalle_pedido(id)
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            }
+
+            // Si existe en el carrito se edita de lo contrario se crea
+            if (sessionStorage.getItem('pedido') && sessionStorage.getItem('pedido').length != '') {
+                const id_pedido = JSON.parse(sessionStorage.getItem('pedido'))
+                editar_pedido(id_pedido)
+            }else{
+                crear_pedido()
+            }
         }
 
         // Parte de las categorias
@@ -404,6 +585,8 @@ async function producto() {
 
             // Lógica cuando presione a una categoria
             button.addEventListener('click', () => {
+                // Agregar pantalla de carga
+                document.querySelector('.loanding').classList.remove('desactivar')
                 id_ca = el.id
                 sessionStorage.setItem('id_ca', JSON.stringify(el.id))
                 this.iterar_categorias()
@@ -475,7 +658,8 @@ async function producto() {
                 arr_productos = quitando_product_del_array
                 localStorage.setItem('productos', JSON.stringify(quitando_product_del_array))
                 sumar_a_existencias(parseInt(div_detalle_carrito.getAttribute('data-id')), parseInt(div_detalle_carrito.getAttribute('data-ca')))
-                this.delete_detalle_pedido(div_detalle_carrito.getAttribute('data-id'))
+                // this.delete_detalle_pedido(div_detalle_carrito.getAttribute('data-id'))
+                this.agregar_orden()
                 this.iterando_sesion()
             })
         }
@@ -485,6 +669,10 @@ async function producto() {
             // Poner el array de product en vacio para que no afecte
             arr_productos = []
             
+            // fetch(url_get_pedidos, option_get_pedidos)
+            // .then(res => res.json())
+            // .then(datos => {
+            // })
             const obtener_pedidos_abiertos_del_user = result_get_pedidos.filter(x => x.id_cliente == usuario_auth).filter(x => x.cerrar_pedido == 0)
             
             // Puede que haya usuarios que no tienen pedidos por lo cual puede dar error
@@ -612,35 +800,43 @@ async function producto() {
         }
 
         // Borrar un producto
-        this.delete_detalle_pedido = (id) => {
-            // Agregar pantalla de carga
-            document.querySelector('.loanding').classList.remove('desactivar')
+        // this.delete_detalle_pedido = (id) => {
+        //     // Agregar pantalla de carga
+        //     document.querySelector('.loanding').classList.remove('desactivar')
 
-            const obtener_pedidos_abiertos_del_user = result_get_pedidos.filter(x => x.id_cliente == usuario_auth).filter(x => x.cerrar_pedido == 0)
+        //     const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete/${id}`;
 
-            if (obtener_pedidos_abiertos_del_user.length != 0) {
-                const obtener_detalle_pedido_del_user = result_get_detalle_pedidos.filter(x => x.num_pedido == obtener_pedidos_abiertos_del_user[0].id)
-                
-                for (const i of obtener_detalle_pedido_del_user) {
-                    if (i.id_producto == id) {
-                        const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete`;
-
-                        const arr_id = [i.id]
+        //     const option_delete_detalle_pedido_ = {
+        //         method: 'DELETE'
+        //     }
             
-                        const option_delete_detalle_pedido_ = {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                authorization: `Bearer ${token}`
-                            },
-                            body: JSON.stringify(arr_id)
-                        }
+        //     fetch(url_delete_detalle_pedido, option_delete_detalle_pedido_)
+
+        //     // const obtener_pedidos_abiertos_del_user = result_get_pedidos.filter(x => x.id_cliente == usuario_auth).filter(x => x.cerrar_pedido == 0)
+
+        //     // if (obtener_pedidos_abiertos_del_user.length != 0) {
+        //     //     const obtener_detalle_pedido_del_user = result_get_detalle_pedidos.filter(x => x.num_pedido == obtener_pedidos_abiertos_del_user[0].id)
+                
+        //     //     for (const i of obtener_detalle_pedido_del_user) {
+        //     //         if (i.id_producto == id) {
+        //     //             const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete`;
+
+        //     //             const arr_id = [i.id]
+            
+        //     //             const option_delete_detalle_pedido_ = {
+        //     //                 method: 'DELETE',
+        //     //                 headers: {
+        //     //                     'Content-Type': 'application/json',
+        //     //                     authorization: `Bearer ${token}`
+        //     //                 },
+        //     //                 body: JSON.stringify(arr_id)
+        //     //             }
                         
-                        fetch(url_delete_detalle_pedido, option_delete_detalle_pedido_)
-                    }
-                }
-            }
-        }
+        //     //             fetch(url_delete_detalle_pedido, option_delete_detalle_pedido_)
+        //     //         }
+        //     //     }
+        //     // }
+        // }
 
         this.render_html_registro = () => {
             for (const pedido of result_get_pedidos) {
@@ -674,6 +870,37 @@ async function producto() {
                     tr.appendChild(td_cerrar_pedido)
                     modal_registro_pedidos.appendChild(tr)
                 }
+
+                // if (pedido.cerrar_pedido == 0) {
+                //     const tr = document.createElement('tr')
+                //     const td_num_pedido = document.createElement('td')
+                //     td_num_pedido.textContent = pedido.id
+                //     const td_fecha_hora = document.createElement('td')
+                //     td_fecha_hora.textContent = pedido.fecha_hora
+                //     const td_cliente = document.createElement('td')
+                //     td_cliente.textContent = pedido.cliente.name
+                //     const td_descuento = document.createElement('td')
+                //     td_descuento.textContent = pedido.descuento
+                //     const td_iva = document.createElement('td')
+                //     td_iva.textContent = pedido.iva
+                //     const td_sub_total = document.createElement('td')
+                //     td_sub_total.textContent = pedido.sub_total
+                //     const td_cerrar_pedido = document.createElement('td')
+                //     if (pedido.cerrar_pedido == 1) {
+                //         td_cerrar_pedido.textContent = 'Cerrado'
+                //     }else{
+                //         td_cerrar_pedido.textContent = 'Abierto'
+                //     }
+    
+                //     tr.appendChild(td_num_pedido)
+                //     tr.appendChild(td_fecha_hora)
+                //     tr.appendChild(td_cliente)
+                //     tr.appendChild(td_descuento)
+                //     tr.appendChild(td_iva)
+                //     tr.appendChild(td_sub_total)
+                //     tr.appendChild(td_cerrar_pedido)
+                //     modal_registro_pedidos_admin.appendChild(tr)
+                // }
             }
         }
     }
