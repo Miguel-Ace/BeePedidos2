@@ -218,15 +218,15 @@
                                     <th>-</th>
                                 </tr>
                             </thead>
-                            @role('Vendedor')
+                            @role('usuario')
                             <tbody id="listaParticipante" class="registro_pedidos">
                             </tbody>
                             @endrole
 
-                            {{-- @role('Vendedor')
+                            @role('Vendedor')
                             <tbody class="registro_pedidos_admin">
                             </tbody>
-                            @endrole --}}
+                            @endrole
                         </table>
                     </div>
                 </div>

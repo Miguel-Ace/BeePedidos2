@@ -131,6 +131,7 @@
 
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://kit.fontawesome.com/cd197f289d.js" crossorigin="anonymous"></script>
 
     <script>
         var textWrapper = document.querySelector('.ml3');

@@ -68,9 +68,9 @@
         sessionStorage.removeItem('idProducts')
         sessionStorage.removeItem('pedido')
         
-        // sessionStorage.removeItem('idCategoria')
+        localStorage.removeItem('productos')
         
-        // sessionStorage.removeItem('productos')
+        // sessionStorage.removeItem('idCategoria')
         // sessionStorage.removeItem('numOrder')
 
         // if (JSON.parse(sessionStorage.getItem('estatus'))) {

@@ -658,7 +658,6 @@ async function producto() {
                 arr_productos = quitando_product_del_array
                 localStorage.setItem('productos', JSON.stringify(quitando_product_del_array))
                 sumar_a_existencias(parseInt(div_detalle_carrito.getAttribute('data-id')), parseInt(div_detalle_carrito.getAttribute('data-ca')))
-                // this.delete_detalle_pedido(div_detalle_carrito.getAttribute('data-id'))
                 this.agregar_orden()
                 this.iterando_sesion()
             })
@@ -799,108 +798,162 @@ async function producto() {
             }
         }
 
-        // Borrar un producto
+        // Actualizar las existencias de los productos
+        // this.update_masiva_producto = (datos) => {
+        //     const url_put_productos = `${URL}/producto/update`;
+
+        //     const option_put_productos = {
+        //         method: 'PUT',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             authorization: `Bearer ${token}`
+        //         },
+        //         body: JSON.stringify(datos)
+        //     }
+            
+        //     fetch(url_put_productos, option_put_productos)
+        // }
+
+        // // Borrar un todos los detalles del pedido
         // this.delete_detalle_pedido = (id) => {
-        //     // Agregar pantalla de carga
-        //     document.querySelector('.loanding').classList.remove('desactivar')
+        //     // let dato
+        //     const url_get_detalle_pedido = `${URL}/detalle_pedido`;
+        //     const option_get_detalle_pedido = {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             authorization: `Bearer ${token}`
+        //         }
+        //     }
+        //     fetch(url_get_detalle_pedido, option_get_detalle_pedido)
+        //     .then(res => res.json())
+        //     .then(items => {
+        //         const dato = items.filter(x => x.num_pedido === id);
+        //         const arr_ids = dato.map(x => ({ id: x.id }));
+        //         // const produ_actualizar = dato.map(x => ({ id: x.id_producto , exis_temp: new_existencia}));
+        //         // Quedo en buscar la manera de pasar el id y restar la cantidad a exis_temp 
+        //         // cuando el usuario admin presione delete de algun pedido
+    
+        //         const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete`;
+        //         const option_delete_detalle_pedido = {
+        //             method: 'DELETE',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 authorization: `Bearer ${token}`
+        //             },
+        //             body: JSON.stringify(arr_ids)
+        //         };
+    
+        //         fetch(url_delete_detalle_pedido, option_delete_detalle_pedido);
+        //         this.update_masiva_producto()
+        //         this.render_html_registro()
+        //         // quitar pantalla de carga
+        //         document.querySelector('.loanding').classList.add('desactivar')
+        //     })
+        // }
 
-        //     const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete/${id}`;
+        // // Borrar un pedido
+        // this.delete_pedido = (id) => {
+        //     const url_delete_pedido = `${URL}/pedido/delete/${id}`;
 
-        //     const option_delete_detalle_pedido_ = {
+        //     const option_delete_pedido = {
         //         method: 'DELETE'
         //     }
             
-        //     fetch(url_delete_detalle_pedido, option_delete_detalle_pedido_)
-
-        //     // const obtener_pedidos_abiertos_del_user = result_get_pedidos.filter(x => x.id_cliente == usuario_auth).filter(x => x.cerrar_pedido == 0)
-
-        //     // if (obtener_pedidos_abiertos_del_user.length != 0) {
-        //     //     const obtener_detalle_pedido_del_user = result_get_detalle_pedidos.filter(x => x.num_pedido == obtener_pedidos_abiertos_del_user[0].id)
-                
-        //     //     for (const i of obtener_detalle_pedido_del_user) {
-        //     //         if (i.id_producto == id) {
-        //     //             const url_delete_detalle_pedido = `${URL}/detalle_pedido/delete`;
-
-        //     //             const arr_id = [i.id]
-            
-        //     //             const option_delete_detalle_pedido_ = {
-        //     //                 method: 'DELETE',
-        //     //                 headers: {
-        //     //                     'Content-Type': 'application/json',
-        //     //                     authorization: `Bearer ${token}`
-        //     //                 },
-        //     //                 body: JSON.stringify(arr_id)
-        //     //             }
-                        
-        //     //             fetch(url_delete_detalle_pedido, option_delete_detalle_pedido_)
-        //     //         }
-        //     //     }
-        //     // }
+        //     fetch(url_delete_pedido, option_delete_pedido)
+        //     .then(res => {
+        //         if (res.ok) {
+        //             this.delete_detalle_pedido(id)
+        //         }
+        //     })
         // }
 
         this.render_html_registro = () => {
-            for (const pedido of result_get_pedidos) {
-                if (pedido.cliente.id == usuario_auth) {
-                    const tr = document.createElement('tr')
-                    const td_num_pedido = document.createElement('td')
-                    td_num_pedido.textContent = pedido.id
-                    const td_fecha_hora = document.createElement('td')
-                    td_fecha_hora.textContent = pedido.fecha_hora
-                    const td_cliente = document.createElement('td')
-                    td_cliente.textContent = pedido.cliente.name
-                    const td_descuento = document.createElement('td')
-                    td_descuento.textContent = pedido.descuento
-                    const td_iva = document.createElement('td')
-                    td_iva.textContent = pedido.iva
-                    const td_sub_total = document.createElement('td')
-                    td_sub_total.textContent = pedido.sub_total
-                    const td_cerrar_pedido = document.createElement('td')
-                    if (pedido.cerrar_pedido == 1) {
-                        td_cerrar_pedido.textContent = 'Cerrado'
-                    }else{
-                        td_cerrar_pedido.textContent = 'Abierto'
+            if (modal_registro_pedidos != null) {
+                for (const pedido of result_get_pedidos) {
+                    if (pedido.cliente.id == usuario_auth) {
+                        const tr = document.createElement('tr')
+                        const td_num_pedido = document.createElement('td')
+                        td_num_pedido.textContent = pedido.id
+                        const td_fecha_hora = document.createElement('td')
+                        td_fecha_hora.textContent = pedido.fecha_hora
+                        const td_cliente = document.createElement('td')
+                        td_cliente.textContent = pedido.cliente.name
+                        const td_descuento = document.createElement('td')
+                        td_descuento.textContent = pedido.descuento
+                        const td_iva = document.createElement('td')
+                        td_iva.textContent = pedido.iva
+                        const td_sub_total = document.createElement('td')
+                        td_sub_total.textContent = pedido.sub_total
+                        const td_cerrar_pedido = document.createElement('td')
+                        if (pedido.cerrar_pedido == 1) {
+                            td_cerrar_pedido.textContent = 'Cerrado'
+                        }else{
+                            td_cerrar_pedido.textContent = 'Abierto'
+                        }
+        
+                        tr.appendChild(td_num_pedido)
+                        tr.appendChild(td_fecha_hora)
+                        tr.appendChild(td_cliente)
+                        tr.appendChild(td_descuento)
+                        tr.appendChild(td_iva)
+                        tr.appendChild(td_sub_total)
+                        tr.appendChild(td_cerrar_pedido)
+                        modal_registro_pedidos.appendChild(tr)
                     }
-    
-                    tr.appendChild(td_num_pedido)
-                    tr.appendChild(td_fecha_hora)
-                    tr.appendChild(td_cliente)
-                    tr.appendChild(td_descuento)
-                    tr.appendChild(td_iva)
-                    tr.appendChild(td_sub_total)
-                    tr.appendChild(td_cerrar_pedido)
-                    modal_registro_pedidos.appendChild(tr)
                 }
+            }else{
+                for (const pedido of result_get_pedidos) {
+                    if (pedido.cerrar_pedido == 0) {
+                        const tr = document.createElement('tr')
+                        const td_num_pedido = document.createElement('td')
+                        td_num_pedido.textContent = pedido.id
+                        const td_fecha_hora = document.createElement('td')
+                        td_fecha_hora.textContent = pedido.fecha_hora
+                        const td_cliente = document.createElement('td')
+                        td_cliente.textContent = pedido.cliente.name
+                        const td_descuento = document.createElement('td')
+                        td_descuento.textContent = pedido.descuento
+                        const td_iva = document.createElement('td')
+                        td_iva.textContent = pedido.iva
+                        const td_sub_total = document.createElement('td')
+                        td_sub_total.textContent = pedido.sub_total
+                        const td_cerrar_pedido = document.createElement('td')
+                        td_cerrar_pedido.textContent = 'Abierto'
 
-                // if (pedido.cerrar_pedido == 0) {
-                //     const tr = document.createElement('tr')
-                //     const td_num_pedido = document.createElement('td')
-                //     td_num_pedido.textContent = pedido.id
-                //     const td_fecha_hora = document.createElement('td')
-                //     td_fecha_hora.textContent = pedido.fecha_hora
-                //     const td_cliente = document.createElement('td')
-                //     td_cliente.textContent = pedido.cliente.name
-                //     const td_descuento = document.createElement('td')
-                //     td_descuento.textContent = pedido.descuento
-                //     const td_iva = document.createElement('td')
-                //     td_iva.textContent = pedido.iva
-                //     const td_sub_total = document.createElement('td')
-                //     td_sub_total.textContent = pedido.sub_total
-                //     const td_cerrar_pedido = document.createElement('td')
-                //     if (pedido.cerrar_pedido == 1) {
-                //         td_cerrar_pedido.textContent = 'Cerrado'
-                //     }else{
-                //         td_cerrar_pedido.textContent = 'Abierto'
-                //     }
-    
-                //     tr.appendChild(td_num_pedido)
-                //     tr.appendChild(td_fecha_hora)
-                //     tr.appendChild(td_cliente)
-                //     tr.appendChild(td_descuento)
-                //     tr.appendChild(td_iva)
-                //     tr.appendChild(td_sub_total)
-                //     tr.appendChild(td_cerrar_pedido)
-                //     modal_registro_pedidos_admin.appendChild(tr)
-                // }
+                        const td_acc = document.createElement('td')
+                        const ico_view = document.createElement('i')
+                        ico_view.setAttribute('class','fa-regular fa-eye')
+                        ico_view.setAttribute('id', pedido.id)
+                        const ico_del = document.createElement('i')
+                        ico_del.setAttribute('class','fa-solid fa-delete-left')
+                        ico_del.setAttribute('id', pedido.id)
+        
+
+                        td_acc.appendChild(ico_view)
+                        td_acc.appendChild(ico_del)
+                        tr.appendChild(td_num_pedido)
+                        tr.appendChild(td_fecha_hora)
+                        tr.appendChild(td_cliente)
+                        tr.appendChild(td_descuento)
+                        tr.appendChild(td_iva)
+                        tr.appendChild(td_sub_total)
+                        tr.appendChild(td_cerrar_pedido)
+                        tr.appendChild(td_acc)
+                        modal_registro_pedidos_admin.appendChild(tr)
+
+                        ico_view.onclick = (e) => {
+                            // Agregar pantalla de carga
+                            // document.querySelector('.loanding').classList.remove('desactivar')
+                            console.log(e.target.getAttribute('id'));
+                        }
+
+                        ico_del.onclick = (e) => {
+                            // Agregar pantalla de carga
+                            document.querySelector('.loanding').classList.remove('desactivar')
+                            this.delete_pedido(e.target.getAttribute('id'))
+                        }
+                    }
+                }
             }
         }
     }

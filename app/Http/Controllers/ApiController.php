@@ -490,14 +490,14 @@ class ApiController extends Controller
         ->where('id_estado',1)->get();
 
         // return response()->json($pedidos, 200);
-        return response()->json($pedidos->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
+        return response()->json($pedidos->load('cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
     }
 
     public function getPedidoCerrado() {
         $pedidos = Order::where('cerrar_pedido', 1)->get();
 
         // return response()->json($pedidos, 200);
-        return response()->json($pedidos->load('empresa','cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
+        return response()->json($pedidos->load('cliente','estado','tipoPago','tipoPedido','tipoEntrega'), 200);
     }
 
 
@@ -545,13 +545,26 @@ class ApiController extends Controller
         foreach ($datos as $dato) {
             $id = $dato['id'];
             $pedido = Order::find($id);
-
+            
             if (!is_null($pedido)) {
                 $pedido->update($dato);
+                
                 // $productosActualizados[] = $modificador;
             }else{
                 Order::create($pedido);
             }
+
+            // $datosActualizacion = [
+            //     'name' => $dato['name'],
+            //     'email' => $dato['email'],
+            //     'telefono' => $dato['telefono'],
+            //     'cedula' => $dato['cedula'],
+            //     'tipo_cedula' => $dato['tipo_cedula'],
+            //     'direccion1' => $dato['direccion1'],
+            //     'direccion2' => $dato['direccion2'],
+            //     'direccion3' => $dato['direccion3'],
+            //     // Agrega más campos según sea necesario
+            // ];
         }
 
         // return response()->json($productosActualizados, 200);
@@ -656,8 +669,19 @@ class ApiController extends Controller
             $producto = Product::find($id);
 
             if (!is_null($producto)) {
-                $producto->update($productoData);
-                // $productosActualizados[] = $producto;
+                // $producto->update($productoData);
+                $productos = [
+                    'producto' => $productoData['producto'],
+                    'descripcion' => $productoData['descripcion'],
+                    'precio' => $productoData['precio'],
+                    'descuento' => $productoData['descuento'],
+                    'id_categoria' => $productoData['id_categoria'],
+                    // Sumar las existencias que me envia Mauro
+                    // a las exis de la bd
+                    'existencia' => $producto->existencia + $productoData['existencia'],
+                ];
+
+                $producto->update($productos);
             }else{
                 Product::create($productoData);
             }
